@@ -35,11 +35,19 @@
 
     <div>
       Map offset
-      <button @click="adjustMapOffset(0, -1)">^</button>
-      <button @click="adjustMapOffset(0, 1)">V</button>
-      <button @click="adjustMapOffset(-1, 0)">&lt;</button>
-      <button @click="adjustMapOffset(1, 0)">&gt;</button>
-      <div>X: {{ mapOffset.x }} Y: {{ mapOffset.y }}</div>
+      
+      <div>
+        X: <input type="text" v-model="mapOffset.x" />
+        Y: <input type="text" v-model="mapOffset.y" />
+      </div>
+    </div>
+
+    <div>
+      Map size
+      <div>
+        Width: <input type="text" v-model="mapSize.width" />
+        Height: <input type="text" v-model="mapSize.height" />
+      </div>
     </div>
 
   </main>
@@ -61,6 +69,10 @@ socket.onopen = (event) => {
 const mapOffset = reactive({
   x: 0,
   y: 0
+});
+const mapSize = reactive({
+  width: 100,
+  height: 100
 });
 const track = reactive({
   id: null,
@@ -95,8 +107,8 @@ function getCarStyles(car) {
   return {
     'background-color': car.color,
     'index': car.ai == 0 ? 1 : 0,
-    'left' : car.x + mapOffset.x + 'px',
-    'top': car.y + mapOffset.y + 'px'
+    'left' : (car.x * (mapSize.width/100))+mapOffset.x + '%',
+    'top': (car.y * (mapSize.height/100))+mapOffset.y + '%'
   }
 }
 
@@ -114,6 +126,11 @@ function updateCars(data) {
 function adjustMapOffset(x, y) {
   mapOffset.x = mapOffset.x + x
   mapOffset.y = mapOffset.y + y
+}
+
+function adjustMapSize(width, height) {
+  mapSize.width = mapSize.width + width
+  mapSize.height = mapSize.height + height
 }
 
 function formatMilliseconds(milliseconds) {
