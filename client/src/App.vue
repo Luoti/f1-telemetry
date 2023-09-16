@@ -5,7 +5,9 @@
 
     <section class="mainSection">
       <div class="map" :style="getMapStyles()">
-        <div v-for="(car, index) in cars" v-bind:key="index" class="car" :style="getCarStyles(car)"></div>
+        <div v-for="(car, index) in cars" v-bind:key="index" class="car" :style="getCarStyles(car)">
+          <div class="nameTag" v-if="car.ai == 0"> {{ car.name }} </div>
+        </div>
       </div>
 
       <div class="positions">
@@ -61,7 +63,6 @@ const cars = reactive([]);
 function getMapStyles() {
   let output = {}
   
-  console.log(track.id)
   if (track.id) {
     output.backgroundImage = "url('public/maps/"+track.id+".png')"
   }
@@ -151,5 +152,16 @@ function getMockData(name) {
   width: 15px;
   height: 15px;
   border: solid 1px black
+}
+.car .nameTag {
+  position: absolute;
+  top: 0;
+  left: 5px;
+  transform: translateY(-110%);
+  z-index: 10;
+  padding: 0 0.5em;
+  background: rgba(255,255,255,0.3);
+  border-radius: 10%;
+  color: black;
 }
 </style>
