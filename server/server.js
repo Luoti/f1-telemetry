@@ -19,8 +19,8 @@ server.listen(3000, () => {
 
 function parseParticipants(data) {
   let response = {
-    'packetID': data.packetID,
-    'data' : []
+    packetID: data.packetID,
+    data : []
   };
   for (const participant in data.parsed.m_participants) {
     response.data.push({
@@ -34,7 +34,21 @@ function parseParticipants(data) {
     });
   }
 
-// console.log(response);
+  return response
+}
+
+function parseMotion(data) {
+  let response = {
+    packetID: data.packetID,
+    data : []
+  };
+
+  for (const participant in data.parsed.m_carMotionData) {
+    response.data.push({
+      'x': data.parsed.m_carMotionData[participant].m_worldPositionX,
+      'y': data.parsed.m_carMotionData[participant].m_worldPositionY,
+    });
+  }
 
   return response
 }
@@ -50,8 +64,9 @@ websocketServer.on('connection', (socket) => {
 
       if (message === 'participants') {
         socket.send(JSON.stringify(parseParticipants(mocks.participants)));
+      } else if (message === 'motion') {
+        socket.send(JSON.stringify(parseMotion(mocks.motion)));
       }
-
      // Broadcast the message to all connected clients
       // websocketServer.clients.forEach(function each(client) {
       //   if (client !== socket && client.readyState === WebSocket.OPEN) {

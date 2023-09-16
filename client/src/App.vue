@@ -20,7 +20,8 @@
       </div>
     </section>
 
-    <button @click="getParticipants">Participants</button>
+    <button @click="getMockData('participants')">Participants</button>
+    <button @click="getMockData('motion')">Motion</button>
 
   </main>
 </template>
@@ -52,13 +53,20 @@ const cars = reactive([]);
 function getCarStyles(car) {
   return {
     'background-color': car.color,
-    'index': car.ai == 0 ? 1 : 0
+    'index': car.ai == 0 ? 1 : 0,
+    'left' : car.x + 'px',
+    'top': car.y + 'px'
   }
 }
 
-function setParticipants(data) {
+function updateCars(data) {
   for (const participant in data.data) {
-    cars[participant] = data.data[participant];
+    if (typeof cars[participant] === 'undefined') {
+      cars[participant] = {}
+    }
+    for (const prop in data.data[participant]) {
+      cars[participant][prop] = data.data[participant][prop];
+    }
   }
 }
 
@@ -74,7 +82,9 @@ socket.onmessage = (event) => {
   const message = JSON.parse(event.data);
 console.log(message);
   if (message.packetID == 'participants') {
-    setParticipants(message)
+    updateCars(message)
+  } else if (message.packetID == 'motion') {
+    updateCars(message)
   }
 
   // try {
@@ -87,8 +97,8 @@ console.log(message);
 
 // MOCKS
 
-function getParticipants() {
-  socket.send('participants');
+function getMockData(name) {
+  socket.send(name);
 }
 
 </script>
@@ -97,11 +107,21 @@ function getParticipants() {
 .mainSection {
   display: flex;
 }
+
+.map {
+  position: relative;
+  width: 500px;
+  height: 500px;
+  border: solid 1px white;
+}
+
 .car {
   display: block;
+  position: absolute;
   background: white;
   border-radius: 100%;
-  width: 10px;
-  height: 10px;
+  width: 15px;
+  height: 15px;
+  border: solid 1px black
 }
 </style>
