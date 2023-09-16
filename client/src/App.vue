@@ -1,7 +1,10 @@
 <template>
   <main>
+
+    <h1>{{ track.name }}</h1>
+
     <section class="mainSection">
-      <div class="map">
+      <div class="map" :style="getMapStyles()">
         <div v-for="(car, index) in cars" v-bind:key="index" class="car" :style="getCarStyles(car)"></div>
       </div>
 
@@ -22,6 +25,7 @@
 
     <button @click="getMockData('participants')">Participants</button>
     <button @click="getMockData('motion')">Motion</button>
+    <button @click="getMockData('session')">Session</button>
 
   </main>
 </template>
@@ -39,6 +43,10 @@ socket.onopen = (event) => {
 // socket.onmessage = (event) => {
 //   console.log("WebSocket message received:", event.value);
 // }
+const track = reactive({
+  id: null,
+  name: 'Not loaded'
+});
 const cars = reactive([]);
 
 // for (let i = 0; i<20; i++) {
@@ -49,6 +57,17 @@ const cars = reactive([]);
 //     color: 'red',
 //   });
 // }
+
+function getMapStyles() {
+  let output = {}
+  
+  console.log(track.id)
+  if (track.id) {
+    output.backgroundImage = "url('public/maps/"+track.id+".png')"
+  }
+
+  return output
+}
 
 function getCarStyles(car) {
   return {
@@ -70,6 +89,11 @@ function updateCars(data) {
   }
 }
 
+function updateSession(data) {
+  track.id = data.data.id
+  track.name = data.data.name
+}
+
 socket.onerror = (error) => {
   console.log("WebSocket error:", error);
 }
@@ -80,11 +104,15 @@ socket.onclose = (event) => {
 
 socket.onmessage = (event) => {
   const message = JSON.parse(event.data);
-console.log(message);
+  
+  console.log(message);
+  
   if (message.packetID == 'participants') {
     updateCars(message)
   } else if (message.packetID == 'motion') {
     updateCars(message)
+  } else if (message.packetID == 'session') {
+    updateSession(message)
   }
 
   // try {
