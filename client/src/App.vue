@@ -34,7 +34,7 @@
     <button @click="getMockData('lapdata2')">lapdata2</button>
 
     <div>
-      Kartan offset
+      Map offset
       <button @click="adjustMapOffset(0, -1)">^</button>
       <button @click="adjustMapOffset(0, 1)">V</button>
       <button @click="adjustMapOffset(-1, 0)">&lt;</button>
