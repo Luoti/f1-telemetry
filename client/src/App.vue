@@ -33,6 +33,15 @@
     <button @click="getMockData('lapdata1')">lapdata1</button>
     <button @click="getMockData('lapdata2')">lapdata2</button>
 
+    <div>
+      Kartan offset
+      <button @click="adjustMapOffset(0, -1)">^</button>
+      <button @click="adjustMapOffset(0, 1)">V</button>
+      <button @click="adjustMapOffset(-1, 0)">&lt;</button>
+      <button @click="adjustMapOffset(1, 0)">&gt;</button>
+      <div>X: {{ mapOffset.x }} Y: {{ mapOffset.y }}</div>
+    </div>
+
   </main>
 </template>
 
@@ -49,6 +58,10 @@ socket.onopen = (event) => {
 // socket.onmessage = (event) => {
 //   console.log("WebSocket message received:", event.value);
 // }
+const mapOffset = reactive({
+  x: 0,
+  y: 0
+});
 const track = reactive({
   id: null,
   name: 'Not loaded'
@@ -82,8 +95,8 @@ function getCarStyles(car) {
   return {
     'background-color': car.color,
     'index': car.ai == 0 ? 1 : 0,
-    'left' : car.x + 'px',
-    'top': car.y + 'px'
+    'left' : car.x + mapOffset.x + 'px',
+    'top': car.y + mapOffset.y + 'px'
   }
 }
 
@@ -98,8 +111,13 @@ function updateCars(data) {
   }
 }
 
+function adjustMapOffset(x, y) {
+  mapOffset.x = mapOffset.x + x
+  mapOffset.y = mapOffset.y + y
+}
+
 function formatMilliseconds(milliseconds) {
-  if (milliseconds == 0) {
+  if (isNaN(milliseconds) || milliseconds == 0) {
     return ''
   }
 
