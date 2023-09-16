@@ -35,6 +35,10 @@ websocketServer.on('connection', (socket) => {
       socket.send(JSON.stringify(Parser.parseMotion(mocks.motion)));
     } else if (message === 'session') {
       socket.send(JSON.stringify(Parser.parseSession(mocks.session)));
+    } else if (message === 'lapdata1') {
+      socket.send(JSON.stringify(Parser.parseLapData(mocks.lapData1)));
+    } else if (message === 'lapdata2') {
+      socket.send(JSON.stringify(Parser.parseLapData(mocks.lapData2)));
     }
     // Broadcast the message to all connected clients
     // websocketServer.clients.forEach(function each(client) {
@@ -66,7 +70,7 @@ const client = new F1TelemetryClient({ port: 20777 });
 // client.on(PACKETS.event, console.log);
 client.on(PACKETS.motion, console.log);
 // client.on(PACKETS.carSetups, console.log);
-// client.on(PACKETS.lapData, console.log);
+client.on(PACKETS.lapData, console.log);
 client.on(PACKETS.session, console.log);
 client.on(PACKETS.participants, console.log);
 // client.on(PACKETS.carTelemetry, console.log);

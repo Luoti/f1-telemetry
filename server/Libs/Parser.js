@@ -1,6 +1,7 @@
 const { constants } = require('../node_modules/@racehub-io/f1-telemetry-client');
 
-class Parser {
+class Parser
+{
   static parseParticipants(data) {
     let response = {
       packetID: data.packetID,
@@ -8,13 +9,13 @@ class Parser {
     };
     for (const participant in data.parsed.m_participants) {
       response.data.push({
-        'ai': data.parsed.m_participants[participant].m_aiControlled,
-        'driver': constants.DRIVERS[data.parsed.m_participants[participant].m_driverId]?.abbreviation ?? '',
-        'name': data.parsed.m_participants[participant].m_name,
-        // 'nationality': constants.NATIONALITIES[data.parsed.m_participants[participant].m_nationality],
-        'number': data.parsed.m_participants[participant].m_raceNumber,
-        'team': constants.TEAMS[data.parsed.m_participants[participant].m_teamId]?.name ?? '',
-        'color': constants.TEAMS[data.parsed.m_participants[participant].m_teamId]?.color ?? ''
+        ai: data.parsed.m_participants[participant].m_aiControlled,
+        driver: constants.DRIVERS[data.parsed.m_participants[participant].m_driverId]?.abbreviation ?? '',
+        name: data.parsed.m_participants[participant].m_name,
+        // nationality: constants.NATIONALITIES[data.parsed.m_participants[participant].m_nationality],
+        number: data.parsed.m_participants[participant].m_raceNumber,
+        team: constants.TEAMS[data.parsed.m_participants[participant].m_teamId]?.name ?? '',
+        color: constants.TEAMS[data.parsed.m_participants[participant].m_teamId]?.color ?? ''
       });
     }
   
@@ -37,6 +38,22 @@ class Parser {
     return response
   }
   
+  static parseLapData(data) {
+    let response = {
+      packetID: data.packetID,
+      data : []
+    };
+    for (const participant in data.parsed.m_lapData) {
+      response.data.push({
+        pos: data.parsed.m_lapData[participant].m_carPosition,
+        deltaToFront: data.parsed.m_lapData[participant].m_deltaToCarInFrontInMS,
+        penalty: data.parsed.m_lapData[participant].m_penalties,
+      });
+    }
+  
+    return response
+  }
+
   static parseSession(data) {
     let response = {
       packetID: data.packetID,

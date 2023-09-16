@@ -14,11 +14,13 @@
         <h1>Positions</h1>
         <table>
           <tbody>
-            <tr v-for="(car, index) in cars" v-bind:key="index">
-              <td>{{ index+1 }}</td>
+            <tr v-for="(car, index) in posSortedCars" v-bind:key="index">
+              <td class="right">{{ index+1 }}</td>
               <td>{{ car.driver }}</td>
               <td>{{ car.name }}</td>
               <td>{{ car.team }}</td>
+              <td class="right">{{ formatMilliseconds(car.deltaToFront) }}</td>
+              <td class="right">{{ car.penalty }}</td>
             </tr>
           </tbody>
         </table>
@@ -28,13 +30,15 @@
     <button @click="getMockData('participants')">Participants</button>
     <button @click="getMockData('motion')">Motion</button>
     <button @click="getMockData('session')">Session</button>
+    <button @click="getMockData('lapdata1')">lapdata1</button>
+    <button @click="getMockData('lapdata2')">lapdata2</button>
 
   </main>
 </template>
 
 <script setup>
 
-import { reactive } from 'vue'
+import { reactive, computed } from 'vue'
 
 const socket = new WebSocket('ws://localhost:3000')
 
@@ -50,6 +54,10 @@ const track = reactive({
   name: 'Not loaded'
 });
 const cars = reactive([]);
+
+const posSortedCars = computed(() => {
+  return cars.toSorted((a,b) => a.pos > b.pos)
+})
 
 // for (let i = 0; i<20; i++) {
 //   cars.push({
@@ -90,6 +98,28 @@ function updateCars(data) {
   }
 }
 
+function formatMilliseconds(milliseconds) {
+  if (milliseconds == 0) {
+    return ''
+  }
+
+  let formattedTime = ''
+  const totalSeconds = Math.floor(milliseconds / 1000);
+  const minutes = Math.floor(totalSeconds / 60);
+
+  if (minutes) {
+    formattedTime += minutes+':'
+  }
+
+  const seconds = totalSeconds % 60;
+  const remainingMilliseconds = milliseconds % 1000;
+
+  // Format the result as a string
+  formattedTime += `${seconds.toString().padStart(2, 0)}.${remainingMilliseconds.toString().padEnd(3, 0)}`;
+
+  return formattedTime;
+}
+
 function updateSession(data) {
   track.id = data.data.id
   track.name = data.data.name
@@ -106,22 +136,15 @@ socket.onclose = (event) => {
 socket.onmessage = (event) => {
   const message = JSON.parse(event.data);
   
-  console.log(message);
-  
   if (message.packetID == 'participants') {
     updateCars(message)
   } else if (message.packetID == 'motion') {
     updateCars(message)
+  } else if (message.packetID == 'lapData') {
+    updateCars(message)
   } else if (message.packetID == 'session') {
     updateSession(message)
   }
-
-  // try {
-  //   cars[message.car].left = message.x + 'px'
-  //   cars[message.car].top = message.y + 'px'
-  // } catch (error) {
-  //   console.log(message.car);
-  // }
 }
 
 // MOCKS
@@ -164,4 +187,13 @@ function getMockData(name) {
   border-radius: 10%;
   color: black;
 }
+
+.positions table td {
+  padding: 0.1em;
+}
+
+.positions table .right {
+  text-align: right;
+}
+
 </style>
