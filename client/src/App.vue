@@ -1,60 +1,112 @@
 <template>
-  <main>
+  <main class="container is-fluid">
 
-    <h1>{{ track.name }}</h1>
+    <h1 class="title is-1">{{ track.name }}</h1>
 
-    <section class="mainSection">
-      <div class="map" :style="getMapStyles()">
-        <div class="mapOffset" :style="getMapOffsetStyles()">
-          <div v-for="(car, index) in cars" v-bind:key="index" class="car" :style="getCarStyles(car)">
-            <div class="nameTag" v-if="car.ai == 0"> {{ car.name }} </div>
+    <section class="mainSection columns">
+      <div class="column">
+        <div class="map block has-background-black" :style="getMapStyles()">
+          <div class="mapOffset" :style="getMapOffsetStyles()">
+            <div v-for="(car, index) in cars" v-bind:key="index" class="car" :style="getCarStyles(car)">
+              <div class="tag is-dark" v-if="car.ai == 0"> {{ car.name }} </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="block">
+          <nav class="panel">
+            <p class="panel-heading">
+              Map controls
+            </p>
+
+            <div class="panel-block">
+              <p class="is-size-6">Map Offset</p>
+            </div>
+            <div class="panel-block is-horizontal">
+              <p class="control">
+                <div class="columns">
+                  <div class="column is-narrow"><div class="field-label is-normal"><label class="label">X:</label></div></div>
+                  <div class="column"><div class="field-body"><input class="input" type="text" v-model="mapOffset.x" /></div></div>
+                  <div class="column is-narrow"><div class="field-label is-normal"><label class="label">Y:</label></div></div>
+                  <div class="column"><div class="field-body"><input class="input" type="text" v-model="mapOffset.y" /></div></div>
+                </div>
+                <div class="columns">
+                  <div class="column is-narrow"><div class="field-label is-normal"><label class="label">Width:</label></div></div>
+                  <div class="column"><div class="field-body"><input class="input" type="text" v-model="mapOffset.width" /></div></div>
+                  <div class="column is-narrow"><div class="field-label is-normal"><label class="label">Height:</label></div></div>
+                  <div class="column"><div class="field-body"><input class="input" type="text" v-model="mapOffset.height" /></div></div>
+                </div>
+                <div class="columns">
+                  <div class="column is-narrow"><div class="field-label is-normal"><label class="label">Rotate:</label></div></div>
+                  <div class="column"><div class="field-body"><input class="input" type="text" v-model="mapOffset.deg" /></div></div>
+                </div>
+              </p>
+            </div>
+
+            <div class="panel-block">
+              <p class="is-size-6">Map Size</p>
+            </div>
+            <div class="panel-block is-horizontal">
+              <p class="control">
+                <div class="columns">
+                  <div class="column is-narrow"><div class="field-label is-normal"><label class="label">Width:</label></div></div>
+                  <div class="column"><div class="field-body"><input class="input" type="text" v-model="mapSize.width" /></div></div>
+                  <div class="column is-narrow"><div class="field-label is-normal"><label class="label">Height:</label></div></div>
+                  <div class="column"><div class="field-body"><input class="input" type="text" v-model="mapSize.height" /></div></div>
+                </div>
+              </p>
+            </div>
+          </nav>
+
+          <div class="field is-grouped is-grouped-centered">
+            <p class="control">
+              <button class="button is-primary" @click="getMockData('participants')">Participants</button>
+            </p>
+            <p class="control">
+              <button class="button" @click="getMockData('motion')">Motion</button>
+            </p>
+            <p class="control">
+              <button class="button" @click="getMockData('session')">Session</button>
+            </p>
+            <p class="control">
+              <button class="button" @click="getMockData('lapdata1')">lapdata1</button>
+            </p>
+            <p class="control">
+              <button class="button" @click="getMockData('lapdata2')">lapdata2</button>
+            </p>
           </div>
         </div>
       </div>
 
-      <div class="positions">
-        <h1>Positions</h1>
-        <table>
-          <TransitionGroup name="list" tag="tbody">
-            <tr v-for="(car, index) in posSortedCars" v-bind:key="index" :class="{player: car.ai == 0}">
-              <td class="right">{{ car.pos }}</td>
-              <td><span v-if="car.driver !== 'DRV'">{{ car.driver }}</span></td>
-              <td>{{ car.name }}</td>
-              <td><span v-if="car.team !== 'INVALID'">{{ car.team }}</span></td>
-              <td class="right">{{ formatMilliseconds(car.deltaToFront) }}</td>
-              <td class="right">{{ car.penalty }}</td>
-            </tr>
-          </TransitionGroup>
-        </table>
+      <div class="column">
+        <div class="positions">
+          <h2 class="title is-2">Positions</h2>
+          <table class="table">
+            <thead>
+              <tr>
+                <th class="has-text-right">Pos</th>
+                <th></th>
+                <th></th>
+                <th>Team</th>
+                <th class="has-text-right">Gap</th>
+                <th class="has-text-right">Penalty</th>
+              </tr>
+            </thead>
+            <TransitionGroup name="list" tag="tbody">
+              <tr v-for="(car, index) in posSortedCars" v-bind:key="car.origIndex" :class="{'is-selected': car.ai == 0}">
+                <td class="has-text-right">{{ car.pos }}</td>
+                <td><span v-if="car.driver !== 'DRV'">{{ car.driver }}</span></td>
+                <td>{{ car.name }}</td>
+                <td><span v-if="car.team !== 'INVALID'">{{ car.team }}</span></td>
+                <td class="has-text-right">{{ formatMilliseconds(car.deltaToFront) }}</td>
+                <td class="has-text-right"><span v-if="car.penalty > 0">{{ car.penalty }}</span></td>
+              </tr>
+            </TransitionGroup>
+          </table>
+        </div>
       </div>
     </section>
-
-    <button @click="getMockData('participants')">Participants</button>
-    <button @click="getMockData('motion')">Motion</button>
-    <button @click="getMockData('session')">Session</button>
-    <button @click="getMockData('lapdata1')">lapdata1</button>
-    <button @click="getMockData('lapdata2')">lapdata2</button>
-
-    <div>
-      Map offset
-      
-      <div>
-        X: <input type="text" v-model="mapOffset.x" />
-        Y: <input type="text" v-model="mapOffset.y" />
-        Rotate: <input type="text" v-model="mapOffset.deg" />
-        Width: <input type="text" v-model="mapOffset.width" />
-        Height: <input type="text" v-model="mapOffset.height" />
-      </div>
-    </div>
-
-    <div>
-      Map size
-      <div>
-        Width: <input type="text" v-model="mapSize.width" />
-        Height: <input type="text" v-model="mapSize.height" />
-      </div>
-    </div>
-
+  
   </main>
 </template>
 
@@ -104,8 +156,14 @@ watch(track, (track) => {
 })
 
 const posSortedCars = computed(() => {
-  return cars.toSorted((a,b) => a.pos > b.pos)
-    .filter((car) => car.pos != 0)
+  let sortedCars = cars.filter((car) => car.pos != 0);
+
+  // For the vue for key
+  for (let i in sortedCars) {
+    sortedCars[i].origIndex = i;
+  }
+
+  return sortedCars.sort((a,b) => a.pos > b.pos)
 })
 
 function getMapOffsetStyles() {
@@ -239,32 +297,12 @@ function getMockData(name) {
   border: solid 1px black;
   transform: translateX(-50%) translateY(-50%)
 }
-.car .nameTag {
+.car .tag {
   position: absolute;
   top: 0;
   left: 5px;
   transform: translateY(-110%);
   z-index: 10;
-  padding: 0 0.5em;
-  background: rgba(255,255,255,0.3);
-  border-radius: 10%;
-  color: black;
-}
-
-.positions {
-  margin-left: 1em;
-}
-.positions table td {
-  padding: 0.2em;
-}
-
-.positions table tr.player td {
-  font-weight: bold;
-  background-color: rgba(0, 0, 255, 0.2)
-}
-
-.positions table .right {
-  text-align: right;
 }
 
 .list-move, /* apply transition to moving elements */
