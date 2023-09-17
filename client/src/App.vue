@@ -5,8 +5,10 @@
 
     <section class="mainSection">
       <div class="map" :style="getMapStyles()">
-        <div v-for="(car, index) in cars" v-bind:key="index" class="car" :style="getCarStyles(car)">
-          <div class="nameTag" v-if="car.ai == 0"> {{ car.name }} </div>
+        <div class="mapOffset" :style="getMapOffsetStyles()">
+          <div v-for="(car, index) in cars" v-bind:key="index" class="car" :style="getCarStyles(car)">
+            <div class="nameTag" v-if="car.ai == 0"> {{ car.name }} </div>
+          </div>
         </div>
       </div>
 
@@ -14,11 +16,11 @@
         <h1>Positions</h1>
         <table>
           <TransitionGroup name="list" tag="tbody">
-            <tr v-for="(car, index) in posSortedCars" v-bind:key="index">
-              <td class="right">{{ index+1 }}</td>
-              <td>{{ car.driver }}</td>
+            <tr v-for="(car, index) in posSortedCars" v-bind:key="index" :class="{player: car.ai == 0}">
+              <td class="right">{{ car.pos }}</td>
+              <td><span v-if="car.driver !== 'DRV'">{{ car.driver }}</span></td>
               <td>{{ car.name }}</td>
-              <td>{{ car.team }}</td>
+              <td><span v-if="car.team !== 'INVALID'">{{ car.team }}</span></td>
               <td class="right">{{ formatMilliseconds(car.deltaToFront) }}</td>
               <td class="right">{{ car.penalty }}</td>
             </tr>
@@ -67,12 +69,12 @@ socket.onopen = (event) => {
 //   console.log("WebSocket message received:", event.value);
 // }
 const mapOffset = reactive({
-  x: 0,
-  y: 0
+  x: 200,
+  y: 200
 });
 const mapSize = reactive({
-  width: 100,
-  height: 100
+  width: 10,
+  height: 10
 });
 const track = reactive({
   id: null,
@@ -82,16 +84,15 @@ const cars = reactive([]);
 
 const posSortedCars = computed(() => {
   return cars.toSorted((a,b) => a.pos > b.pos)
+    .filter((car) => car.pos != 0)
 })
 
-// for (let i = 0; i<20; i++) {
-//   cars.push({
-//     position: 'absolute',
-//     top: 0,
-//     left: 0,
-//     color: 'red',
-//   });
-// }
+function getMapOffsetStyles() {
+  return {
+    left: mapOffset.x + 'px',
+    top: mapOffset.y + 'px'
+  }
+}
 
 function getMapStyles() {
   let output = {}
@@ -107,8 +108,8 @@ function getCarStyles(car) {
   return {
     'background-color': car.color,
     'index': car.ai == 0 ? 1 : 0,
-    'left' : (car.x * (mapSize.width/100))+mapOffset.x + '%',
-    'top': (car.y * (mapSize.height/100))+mapOffset.y + '%'
+    'left' : ((car.x * (mapSize.width/100))) + '%',
+    'top': ((car.y * (mapSize.height/100))) + '%'
   }
 }
 
@@ -123,16 +124,6 @@ function updateCars(data) {
   }
 }
 
-function adjustMapOffset(x, y) {
-  mapOffset.x = mapOffset.x + x
-  mapOffset.y = mapOffset.y + y
-}
-
-function adjustMapSize(width, height) {
-  mapSize.width = mapSize.width + width
-  mapSize.height = mapSize.height + height
-}
-
 function formatMilliseconds(milliseconds) {
   if (isNaN(milliseconds) || milliseconds == 0) {
     return ''
@@ -142,15 +133,15 @@ function formatMilliseconds(milliseconds) {
   const totalSeconds = Math.floor(milliseconds / 1000);
   const minutes = Math.floor(totalSeconds / 60);
 
-  if (minutes) {
-    formattedTime += minutes+':'
+  if (minutes > 0) {
+    formattedTime += minutes + ':'
   }
 
   const seconds = totalSeconds % 60;
   const remainingMilliseconds = milliseconds % 1000;
 
   // Format the result as a string
-  formattedTime += `${seconds.toString().padStart(2, 0)}.${remainingMilliseconds.toString().padEnd(3, 0)}`;
+  formattedTime += `${seconds}.${remainingMilliseconds.toString().padEnd(3, 0)}`;
 
   return formattedTime;
 }
@@ -171,6 +162,8 @@ socket.onclose = (event) => {
 socket.onmessage = (event) => {
   const message = JSON.parse(event.data);
   
+console.log(message)
+
   if (message.packetID == 'participants') {
     updateCars(message)
   } else if (message.packetID == 'motion') {
@@ -200,6 +193,14 @@ function getMockData(name) {
   width: 500px;
   height: 500px;
   border: solid 1px white;
+  background-position: center center;
+  background-size: contain;
+}
+
+.map .mapOffset {
+  position: absolute;
+  width: 100%;
+  height: 100%;
 }
 
 .car {
@@ -209,7 +210,8 @@ function getMockData(name) {
   border-radius: 100%;
   width: 15px;
   height: 15px;
-  border: solid 1px black
+  border: solid 1px black;
+  transform: translateX(-50%) translateY(-50%)
 }
 .car .nameTag {
   position: absolute;
@@ -223,8 +225,16 @@ function getMockData(name) {
   color: black;
 }
 
+.positions {
+  margin-left: 1em;
+}
 .positions table td {
-  padding: 0.1em;
+  padding: 0.2em;
+}
+
+.positions table tr.player td {
+  font-weight: bold;
+  background-color: rgba(0, 0, 255, 0.2)
 }
 
 .positions table .right {

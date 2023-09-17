@@ -4,18 +4,18 @@ class Parser
 {
   static parseParticipants(data) {
     let response = {
-      packetID: data.packetID,
+      packetID: 'participants',
       data : []
     };
-    for (const participant in data.parsed.m_participants) {
+    for (const participant in data.m_participants) {
       response.data.push({
-        ai: data.parsed.m_participants[participant].m_aiControlled,
-        driver: constants.DRIVERS[data.parsed.m_participants[participant].m_driverId]?.abbreviation ?? '',
-        name: data.parsed.m_participants[participant].m_name,
-        // nationality: constants.NATIONALITIES[data.parsed.m_participants[participant].m_nationality],
-        number: data.parsed.m_participants[participant].m_raceNumber,
-        team: constants.TEAMS[data.parsed.m_participants[participant].m_teamId]?.name ?? '',
-        color: constants.TEAMS[data.parsed.m_participants[participant].m_teamId]?.color ?? ''
+        ai: data.m_participants[participant].m_aiControlled,
+        driver: constants.DRIVERS[data.m_participants[participant].m_driverId]?.abbreviation ?? '',
+        name: data.m_participants[participant].m_name,
+        // nationality: constants.NATIONALITIES[data.m_participants[participant].m_nationality],
+        number: data.m_participants[participant].m_raceNumber,
+        team: constants.TEAMS[data.m_participants[participant].m_teamId]?.name ?? '',
+        color: constants.TEAMS[data.m_participants[participant].m_teamId]?.color ?? ''
       });
     }
   
@@ -24,14 +24,14 @@ class Parser
 
   static parseMotion(data) {
     let response = {
-      packetID: data.packetID,
+      packetID: 'motion',
       data : []
     };
   
-    for (const participant in data.parsed.m_carMotionData) {
+    for (const participant in data.m_carMotionData) {
       response.data.push({
-        x: data.parsed.m_carMotionData[participant].m_worldPositionX,
-        y: data.parsed.m_carMotionData[participant].m_worldPositionY,
+        x: data.m_carMotionData[participant].m_worldPositionX,
+        y: data.m_carMotionData[participant].m_worldPositionZ,
       });
     }
   
@@ -40,14 +40,14 @@ class Parser
   
   static parseLapData(data) {
     let response = {
-      packetID: data.packetID,
+      packetID: 'lapData',
       data : []
     };
-    for (const participant in data.parsed.m_lapData) {
+    for (const participant in data.m_lapData) {
       response.data.push({
-        pos: data.parsed.m_lapData[participant].m_carPosition,
-        deltaToFront: data.parsed.m_lapData[participant].m_deltaToCarInFrontInMS,
-        penalty: data.parsed.m_lapData[participant].m_penalties,
+        pos: data.m_lapData[participant].m_carPosition,
+        deltaToFront: data.m_lapData[participant].m_deltaToCarInFrontInMS,
+        penalty: data.m_lapData[participant].m_penalties,
       });
     }
   
@@ -56,10 +56,10 @@ class Parser
 
   static parseSession(data) {
     let response = {
-      packetID: data.packetID,
+      packetID: 'session',
       data : {
-        id: data.parsed.m_trackId,
-        name: constants.TRACKS[data.parsed.m_trackId]?.name ?? 'Unknown'
+        id: data.m_trackId,
+        name: constants.TRACKS[data.m_trackId]?.name ?? 'Unknown'
       }
     };
   

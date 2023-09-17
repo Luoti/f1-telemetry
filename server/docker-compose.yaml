@@ -10,4 +10,5 @@ services:
       - ./:/home/node/app
     ports:
       - "3000:3000"
+      - "20777:20777/udp"
     command: "npm start"
