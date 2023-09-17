@@ -60,7 +60,8 @@
 
 <script setup>
 
-import { reactive, computed } from 'vue'
+import { reactive, computed, watch } from 'vue'
+import {additionalMapData} from './resources/additionalMapData'
 
 const socket = new WebSocket('ws://localhost:3000')
 
@@ -86,7 +87,21 @@ const track = reactive({
   id: null,
   name: 'Not loaded'
 });
+
 const cars = reactive([]);
+
+// Load additional map data when track changes
+watch(track, (track) => {
+  console.log(track)
+
+  for (let prop in additionalMapData[track.id].mapOffset) {
+    mapOffset[prop] = additionalMapData[track.id].mapOffset[prop]
+  }
+
+  for (let prop in additionalMapData[track.id].mapSize) {
+    mapSize[prop] = additionalMapData[track.id].mapSize[prop]
+  }
+})
 
 const posSortedCars = computed(() => {
   return cars.toSorted((a,b) => a.pos > b.pos)
@@ -108,18 +123,19 @@ function getMapStyles() {
   }
   
   if (track.id) {
-    output.backgroundImage = "url('public/maps/"+track.id+".png')"
+    output.backgroundImage = "url('/maps/"+track.id+".png')"
   }
 
   return output
 }
 
 function getCarStyles(car) {
-  return {
-    'background-color': car.color,
-    'index': car.ai == 0 ? 1 : 0,
-    'left' : ((car.x * (mapOffset.width/100))) + '%',
-    'top': ((car.y * (mapOffset.height/100))) + '%'
+    return {
+    backgroundColor: car.color,
+    zIndex: car.ai == 0 ? 1 : 0,
+    borderWidth: (car.ai == 0 ? 3 : 1) + 'px',
+    left: ((car.x * (mapOffset.width/100))) + '%',
+    top: ((car.y * (mapOffset.height/100))) + '%'
   }
 }
 
