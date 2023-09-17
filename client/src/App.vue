@@ -41,6 +41,7 @@
       <div>
         X: <input type="text" v-model="mapOffset.x" />
         Y: <input type="text" v-model="mapOffset.y" />
+        Rotate: <input type="text" v-model="mapOffset.deg" />
       </div>
     </div>
 
@@ -70,7 +71,8 @@ socket.onopen = (event) => {
 // }
 const mapOffset = reactive({
   x: 200,
-  y: 200
+  y: 200,
+  deg: 0
 });
 const mapSize = reactive({
   width: 10,
@@ -90,7 +92,8 @@ const posSortedCars = computed(() => {
 function getMapOffsetStyles() {
   return {
     left: mapOffset.x + 'px',
-    top: mapOffset.y + 'px'
+    top: mapOffset.y + 'px',
+    rotate: mapOffset.deg + 'deg'
   }
 }
 
@@ -162,8 +165,6 @@ socket.onclose = (event) => {
 socket.onmessage = (event) => {
   const message = JSON.parse(event.data);
   
-console.log(message)
-
   if (message.packetID == 'participants') {
     updateCars(message)
   } else if (message.packetID == 'motion') {
@@ -195,6 +196,8 @@ function getMockData(name) {
   border: solid 1px white;
   background-position: center center;
   background-size: contain;
+  /* overflow: hidden; */
+  z-index: -1;
 }
 
 .map .mapOffset {
