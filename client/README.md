@@ -22,6 +22,12 @@ npm install
 npm run dev
 ```
 
+With docker:
+
+```sh
+docker compose up -d
+```
+
 ### Compile and Minify for Production
 
 ```sh

@@ -1,3 +1,5 @@
-# To run
+# To run with docker
 
-`nodejs server.js`
+```sh
+docker compose up
+```
