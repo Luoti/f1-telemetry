@@ -42,6 +42,8 @@
         X: <input type="text" v-model="mapOffset.x" />
         Y: <input type="text" v-model="mapOffset.y" />
         Rotate: <input type="text" v-model="mapOffset.deg" />
+        Width: <input type="text" v-model="mapOffset.width" />
+        Height: <input type="text" v-model="mapOffset.height" />
       </div>
     </div>
 
@@ -72,11 +74,13 @@ socket.onopen = (event) => {
 const mapOffset = reactive({
   x: 200,
   y: 200,
-  deg: 0
-});
-const mapSize = reactive({
+  deg: 0,
   width: 10,
   height: 10
+});
+const mapSize = reactive({
+  width: 500,
+  height: 500
 });
 const track = reactive({
   id: null,
@@ -98,7 +102,10 @@ function getMapOffsetStyles() {
 }
 
 function getMapStyles() {
-  let output = {}
+  let output = {
+    width: mapSize.width + 'px',
+    height: mapSize.height + 'px'
+  }
   
   if (track.id) {
     output.backgroundImage = "url('public/maps/"+track.id+".png')"
@@ -111,8 +118,8 @@ function getCarStyles(car) {
   return {
     'background-color': car.color,
     'index': car.ai == 0 ? 1 : 0,
-    'left' : ((car.x * (mapSize.width/100))) + '%',
-    'top': ((car.y * (mapSize.height/100))) + '%'
+    'left' : ((car.x * (mapOffset.width/100))) + '%',
+    'top': ((car.y * (mapOffset.height/100))) + '%'
   }
 }
 
