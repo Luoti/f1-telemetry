@@ -26,19 +26,19 @@
               <p class="control">
                 <div class="columns">
                   <div class="column is-narrow"><div class="field-label is-normal"><label class="label">X:</label></div></div>
-                  <div class="column"><div class="field-body"><input class="input" type="text" v-model="mapOffset.x" /></div></div>
+                  <div class="column"><div class="field-body"><input class="input" type="number" step="0.5" v-model="mapOffset.x" /></div></div>
                   <div class="column is-narrow"><div class="field-label is-normal"><label class="label">Y:</label></div></div>
-                  <div class="column"><div class="field-body"><input class="input" type="text" v-model="mapOffset.y" /></div></div>
+                  <div class="column"><div class="field-body"><input class="input" type="number" step="0.5" v-model="mapOffset.y" /></div></div>
                 </div>
                 <div class="columns">
                   <div class="column is-narrow"><div class="field-label is-normal"><label class="label">Width:</label></div></div>
-                  <div class="column"><div class="field-body"><input class="input" type="text" v-model="mapOffset.width" /></div></div>
+                  <div class="column"><div class="field-body"><input class="input" type="number" step="0.5" v-model="mapOffset.width" /></div></div>
                   <div class="column is-narrow"><div class="field-label is-normal"><label class="label">Height:</label></div></div>
-                  <div class="column"><div class="field-body"><input class="input" type="text" v-model="mapOffset.height" /></div></div>
+                  <div class="column"><div class="field-body"><input class="input" type="number" step="0.5" v-model="mapOffset.height" /></div></div>
                 </div>
                 <div class="columns">
                   <div class="column is-narrow"><div class="field-label is-normal"><label class="label">Rotate:</label></div></div>
-                  <div class="column"><div class="field-body"><input class="input" type="text" v-model="mapOffset.deg" /></div></div>
+                  <div class="column"><div class="field-body"><input class="input" type="number" step="0.5" v-model="mapOffset.deg" /></div></div>
                 </div>
               </p>
             </div>
@@ -50,9 +50,9 @@
               <p class="control">
                 <div class="columns">
                   <div class="column is-narrow"><div class="field-label is-normal"><label class="label">Width:</label></div></div>
-                  <div class="column"><div class="field-body"><input class="input" type="text" v-model="mapSize.width" /></div></div>
+                  <div class="column"><div class="field-body"><input class="input" type="number" step="0.5" v-model="mapSize.width" /></div></div>
                   <div class="column is-narrow"><div class="field-label is-normal"><label class="label">Height:</label></div></div>
-                  <div class="column"><div class="field-body"><input class="input" type="text" v-model="mapSize.height" /></div></div>
+                  <div class="column"><div class="field-body"><input class="input" type="number" step="0.5" v-model="mapSize.height" /></div></div>
                 </div>
               </p>
             </div>
