@@ -32,13 +32,13 @@
                 </div>
                 <div class="columns">
                   <div class="column is-narrow"><div class="field-label is-normal"><label class="label">Width:</label></div></div>
-                  <div class="column"><div class="field-body"><input class="input" type="number" step="0.5" v-model="mapOffset.width" /></div></div>
-                  <div class="column is-narrow"><div class="field-label is-normal"><label class="label">Height:</label></div></div>
                   <div class="column"><div class="field-body"><input class="input" type="number" step="0.5" v-model="mapOffset.height" /></div></div>
+                  <div class="column is-narrow"><div class="field-label is-normal"><label class="label">Height:</label></div></div>
+                  <div class="column"><div class="field-body"><input class="input" type="number" step="0.5" v-model="mapOffset.width" /></div></div>
                 </div>
                 <div class="columns">
                   <div class="column is-narrow"><div class="field-label is-normal"><label class="label">Rotate:</label></div></div>
-                  <div class="column"><div class="field-body"><input class="input" type="number" step="0.5" v-model="mapOffset.deg" /></div></div>
+                  <div class="column"><div class="field-body"><input class="input" type="number" step="0.5" v-model="mapOffset.rotate" /></div></div>
                 </div>
               </p>
             </div>
@@ -127,7 +127,7 @@ socket.onopen = (event) => {
 const mapOffset = reactive({
   x: 200,
   y: 200,
-  deg: 0,
+  rotate: 0,
   width: 10,
   height: 10
 });
@@ -170,7 +170,7 @@ function getMapOffsetStyles() {
   return {
     left: mapOffset.x + 'px',
     top: mapOffset.y + 'px',
-    rotate: mapOffset.deg + 'deg'
+    rotate: mapOffset.rotate + 'deg'
   }
 }
 
