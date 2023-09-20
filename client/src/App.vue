@@ -8,7 +8,7 @@
         <div class="map block has-background-black" :style="getMapStyles()">
           <div class="mapOffset" :style="getMapOffsetStyles()">
             <div v-for="(car, index) in cars" v-bind:key="index" class="car" :style="getCarStyles(car)">
-              <div class="tag is-dark" v-if="car.ai == 0"> {{ car.name }} </div>
+              <div class="tag is-dark" v-if="car.ai == 0" :style="nameTagStyles"> {{ car.name }} </div>
             </div>
           </div>
         </div>
@@ -166,6 +166,12 @@ const posSortedCars = computed(() => {
   return sortedCars.sort((a,b) => a.pos > b.pos)
 })
 
+const nameTagStyles = computed(() => {
+  return {
+    rotate: 0-mapOffset.rotate + 'deg'
+  }
+})
+
 function getMapOffsetStyles() {
   return {
     left: mapOffset.x + '%',
@@ -188,7 +194,7 @@ function getMapStyles() {
 }
 
 function getCarStyles(car) {
-    return {
+  return {
     backgroundColor: car.color,
     zIndex: car.ai == 0 ? 1 : 0,
     borderWidth: (car.ai == 0 ? 3 : 1) + 'px',
@@ -299,9 +305,8 @@ function getMockData(name) {
 }
 .car .tag {
   position: absolute;
-  top: 0;
-  left: 5px;
-  transform: translateY(-110%);
+  transform: translateX(18%) translateY(-150%);
+  transform-origin: left top;
   z-index: 10;
 }
 
