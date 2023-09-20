@@ -6,7 +6,7 @@ export const additionalMapData = {
     // Shanghai
     2: {mapOffset: {x: 0, y: 0, rotate: 0, width: 10, height: 10}, mapSize: {width: 760, height: 460}},
     // Sakhir (Bahrain)
-    3: {mapOffset: {x: 188.5, y: -420, rotate: 267.2, width: 5.25, height: 8.35}, mapSize: {width: 760, height: 460}},
+    3: {mapOffset: {x: 25.5, y: -91.5, rotate: 267.2, width: 5.25, height: 8.35}, mapSize: {width: 760, height: 460}},
     // Catalunya
     4: {mapOffset: {x: 0, y: 0, rotate: 0, width: 10, height: 10}, mapSize: {width: 760, height: 460}},
     // Monaco
