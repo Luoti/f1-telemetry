@@ -1,21 +1,21 @@
 <template>
   <main class="container is-fluid">
 
-    <h1 class="title is-1">{{ track.name }}</h1>
+    <h1 class="title is-1 f1-font">{{ track.name }}</h1>
 
     <section class="mainSection columns">
       <div class="column">
         <div class="map block has-background-black" :style="getMapStyles()">
           <div class="mapOffset" :style="getMapOffsetStyles()">
             <div v-for="(car, index) in cars" v-bind:key="index" class="car" :style="getCarStyles(car)">
-              <div class="tag is-dark" v-if="car.ai == 0" :style="nameTagStyles"> {{ car.name }} </div>
+              <div class="tag is-dark f1-font" v-if="car.ai == 0" :style="nameTagStyles"> {{ car.name }} </div>
             </div>
 
             <div v-for="(car, index) in savedDebugCarPositions.savedPositions" v-bind:key="index" class="car" :style="getCarStyles(car)"> </div>
           </div>
         </div>
 
-        <div class="block">
+        <div class="block p-3">
           <nav class="panel">
             <p class="panel-heading">
               Map controls
@@ -88,7 +88,7 @@
         </div>
       </div>
 
-      <div class="column">
+      <div class="column f1-font">
         <div class="positions">
           <h2 class="title is-2">Positions</h2>
           <table class="table">

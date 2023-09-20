@@ -1,0 +1,29 @@
+@charset "utf-8";
+
+@font-face {
+    font-family: 'super-quick-formula';
+    src: url('./super-quick-formula/Super Quick Formula.ttf') format('truetype');
+}
+
+$black: hsl(0, 0%, 4%);
+$black-ter: hsl(0, 0%, 14%);
+$white-ter: hsl(0, 0%, 96%);
+$white-bis: hsl(0, 0%, 98%);
+$purple: hsl(271, 100%, 71%);
+
+$panel-heading-background-color: $black-ter;
+$body-background-color: $black;
+$scheme-main: $black;
+$text: $white-ter;
+$text-strong: $white-bis;
+
+
+$table-row-active-background-color: $purple;
+
+
+.f1-font {
+    font-family: super-quick-formula;
+    text-transform: uppercase;
+}
+
+@import "../node_modules/bulma/bulma.sass";
