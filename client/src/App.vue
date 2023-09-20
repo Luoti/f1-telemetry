@@ -241,7 +241,7 @@ function formatMilliseconds(milliseconds) {
   const remainingMilliseconds = milliseconds % 1000;
 
   // Format the result as a string
-  formattedTime += `${seconds}.${remainingMilliseconds.toString().padEnd(3, 0)}`;
+  formattedTime += `${seconds.toString().padEnd(2, 0)}.${remainingMilliseconds.toString().padEnd(3, 0)}`;
 
   return formattedTime;
 }
