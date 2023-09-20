@@ -168,8 +168,8 @@ const posSortedCars = computed(() => {
 
 function getMapOffsetStyles() {
   return {
-    left: mapOffset.x + 'px',
-    top: mapOffset.y + 'px',
+    left: mapOffset.x + '%',
+    top: mapOffset.y + '%',
     rotate: mapOffset.rotate + 'deg'
   }
 }
