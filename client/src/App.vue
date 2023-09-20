@@ -32,9 +32,9 @@
                 </div>
                 <div class="columns">
                   <div class="column is-narrow"><div class="field-label is-normal"><label class="label">Width:</label></div></div>
-                  <div class="column"><div class="field-body"><input class="input" type="number" step="0.5" v-model="mapOffset.height" /></div></div>
-                  <div class="column is-narrow"><div class="field-label is-normal"><label class="label">Height:</label></div></div>
                   <div class="column"><div class="field-body"><input class="input" type="number" step="0.5" v-model="mapOffset.width" /></div></div>
+                  <div class="column is-narrow"><div class="field-label is-normal"><label class="label">Height:</label></div></div>
+                  <div class="column"><div class="field-body"><input class="input" type="number" step="0.5" v-model="mapOffset.height" /></div></div>
                 </div>
                 <div class="columns">
                   <div class="column is-narrow"><div class="field-label is-normal"><label class="label">Rotate:</label></div></div>
@@ -192,8 +192,8 @@ function getCarStyles(car) {
     backgroundColor: car.color,
     zIndex: car.ai == 0 ? 1 : 0,
     borderWidth: (car.ai == 0 ? 3 : 1) + 'px',
-    left: ((car.x * (mapOffset.width/100))) + '%',
-    top: ((car.y * (mapOffset.height/100))) + '%'
+    left: ((car.x * (mapOffset.height/100))) + '%',
+    top: ((car.y * (mapOffset.width/100))) + '%'
   }
 }
 
