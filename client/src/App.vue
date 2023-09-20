@@ -10,6 +10,8 @@
             <div v-for="(car, index) in cars" v-bind:key="index" class="car" :style="getCarStyles(car)">
               <div class="tag is-dark" v-if="car.ai == 0" :style="nameTagStyles"> {{ car.name }} </div>
             </div>
+
+            <div v-for="(car, index) in savedDebugCarPositions.savedPositions" v-bind:key="index" class="car" :style="getCarStyles(car)"> </div>
           </div>
         </div>
 
@@ -73,6 +75,14 @@
             </p>
             <p class="control">
               <button class="button" @click="getMockData('lapdata2')">lapdata2</button>
+            </p>
+            <p class="control">
+              <button class="button" @click="startCarPositionSave">
+                Save car positions (
+                  <span v-if="savedDebugCarPositions.timer">stop</span>
+                  <span v-else>start</span>
+                  )
+              </button>
             </p>
           </div>
         </div>
@@ -263,7 +273,33 @@ socket.onmessage = (event) => {
   }
 }
 
-// MOCKS
+const savedDebugCarPositions = reactive({
+  timer: null,
+  savedPositions: []
+});
+
+function startCarPositionSave() {
+  console.log(savedDebugCarPositions.timer)
+  if (savedDebugCarPositions.timer !== null) {
+    clearInterval(savedDebugCarPositions.timer)
+    savedDebugCarPositions.timer = null
+    return
+  }
+
+  savedDebugCarPositions.savedPositions = []
+
+  savedDebugCarPositions.timer = setInterval(function() {
+    for (let i in cars) {
+      
+      let debugCar = {}
+
+      for (const prop in cars[i]) {
+        debugCar[prop] = cars[i][prop];
+      }
+      savedDebugCarPositions.savedPositions.push(debugCar)
+    }
+  }, 5000)
+}
 
 function getMockData(name) {
   socket.send(name);
