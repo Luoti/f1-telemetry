@@ -174,6 +174,22 @@ const settings = reactive({
   }
 });
 
+// Try to load settings from localstorage
+if (localStorage.getItem('settings') !== null) {
+  const savedSettings = JSON.parse(localStorage.getItem('settings'))
+
+  for (const prop in settings) {
+    if (savedSettings[prop] !== null) [
+      settings[prop] = savedSettings[prop]
+    ]
+  }
+}
+
+// Autosave settings
+watch(settings, (settings) => {
+  localStorage.setItem('settings', JSON.stringify(settings))
+})
+
 // Load additional map data when session changes
 watch(session, (session) => {
   if (typeof additionalMapData[session.trackId] == 'undefined') {
