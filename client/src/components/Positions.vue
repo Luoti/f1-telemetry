@@ -128,7 +128,7 @@ function getTyreLetter(tyre) {
 function getTeamStyles(teamId) {
   let output = {}
 
-  if (teamId) {
+  if (teamId !== '' && teamId !== null) {
     output.backgroundImage = "url('/teams/icons/"+teamId+".png')"
   }
 
