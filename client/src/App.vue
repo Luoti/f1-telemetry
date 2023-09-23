@@ -5,91 +5,14 @@
 
     <section class="mainSection columns">
       <div class="column" v-if="settings.show.map">
-        <h2 class="title is-2 f1-font">Map</h2>
-        <div class="map block has-background-black" :style="getMapStyles()">
-          <div class="mapOffset" :style="getMapOffsetStyles()">
-            <div v-for="(car, index) in cars" v-bind:key="index" class="car" :style="getCarStyles(car)">
-              <div class="tag is-dark f1-font" v-if="car.ai == 0" :style="nameTagStyles"> {{ car.name }} </div>
-            </div>
-
-            <div v-for="(car, index) in savedDebugCarPositions.savedPositions" v-bind:key="index" class="car" :style="getCarStyles(car)"> </div>
-          </div>
-        </div>
-
-        <div v-if="settings.show.mapControls" class="block p-3">
-          <nav class="panel">
-            <p class="panel-heading">
-              Map controls
-            </p>
-
-            <div class="panel-block">
-              <p class="is-size-6">Map Offset</p>
-            </div>
-            <div class="panel-block is-horizontal">
-              <div class="control">
-                <div class="columns">
-                  <div class="column is-narrow"><div class="field-label is-normal"><label class="label">X:</label></div></div>
-                  <div class="column"><div class="field-body"><input class="input" type="number" step="0.5" v-model="mapOffset.x" /></div></div>
-                  <div class="column is-narrow"><div class="field-label is-normal"><label class="label">Y:</label></div></div>
-                  <div class="column"><div class="field-body"><input class="input" type="number" step="0.5" v-model="mapOffset.y" /></div></div>
-                </div>
-                <div class="columns">
-                  <div class="column is-narrow"><div class="field-label is-normal"><label class="label">Width:</label></div></div>
-                  <div class="column"><div class="field-body"><input class="input" type="number" step="0.5" v-model="mapOffset.width" /></div></div>
-                  <div class="column is-narrow"><div class="field-label is-normal"><label class="label">Height:</label></div></div>
-                  <div class="column"><div class="field-body"><input class="input" type="number" step="0.5" v-model="mapOffset.height" /></div></div>
-                </div>
-                <div class="columns">
-                  <div class="column is-narrow"><div class="field-label is-normal"><label class="label">Rotate:</label></div></div>
-                  <div class="column"><div class="field-body"><input class="input" type="number" step="0.5" v-model="mapOffset.rotate" /></div></div>
-                </div>
-              </div>
-            </div>
-
-            <div class="panel-block">
-              <p class="is-size-6">Map Size</p>
-            </div>
-            <div class="panel-block is-horizontal">
-              <div class="control">
-                <div class="columns">
-                  <div class="column is-narrow"><div class="field-label is-normal"><label class="label">Width:</label></div></div>
-                  <div class="column"><div class="field-body"><input class="input" type="number" step="0.5" v-model="mapSize.width" /></div></div>
-                  <div class="column is-narrow"><div class="field-label is-normal"><label class="label">Height:</label></div></div>
-                  <div class="column"><div class="field-body"><input class="input" type="number" step="0.5" v-model="mapSize.height" /></div></div>
-                </div>
-              </div>
-            </div>
-          </nav>
-
-          <div class="field is-grouped is-grouped-centered">
-            <p class="control">
-              <button class="button is-primary" @click="getMockData('participants')">Participants</button>
-            </p>
-            <p class="control">
-              <button class="button" @click="getMockData('motion')">Motion</button>
-            </p>
-            <p class="control">
-              <button class="button" @click="getMockData('session')">Session</button>
-            </p>
-            <p class="control">
-              <button class="button" @click="getMockData('carstatus')">CarStatus</button>
-            </p>
-            <p class="control">
-              <button class="button" @click="getMockData('lapdata1')">lapdata1</button>
-            </p>
-            <p class="control">
-              <button class="button" @click="getMockData('lapdata2')">lapdata2</button>
-            </p>
-            <p class="control">
-              <button class="button" @click="startCarPositionSave">
-                Save car positions (
-                  <span v-if="savedDebugCarPositions.timer">stop</span>
-                  <span v-else>start</span>
-                  )
-              </button>
-            </p>
-          </div>
-        </div>
+        <map-component 
+          :settings="settings"
+          :cars="cars"
+          :session="session"
+          :mapOffset="mapOffset"
+          :mapSize="mapSize"
+          :savedDebugCarPositions="savedDebugCarPositions"
+           />
       </div>
 
       <div v-if="settings.show.positions" class="column f1-font">
@@ -102,6 +25,36 @@
     </section>
   
     <settings-modal :settings="settings"></settings-modal>
+
+    <div class="field is-grouped is-grouped-centered">
+      <p class="control">
+        <button class="button is-primary" @click="getMockData('participants')">Participants</button>
+      </p>
+      <p class="control">
+        <button class="button" @click="getMockData('motion')">Motion</button>
+      </p>
+      <p class="control">
+        <button class="button" @click="getMockData('session')">Session</button>
+      </p>
+      <p class="control">
+        <button class="button" @click="getMockData('carstatus')">CarStatus</button>
+      </p>
+      <p class="control">
+        <button class="button" @click="getMockData('lapdata1')">lapdata1</button>
+      </p>
+      <p class="control">
+        <button class="button" @click="getMockData('lapdata2')">lapdata2</button>
+      </p>
+      <p class="control">
+        <button class="button" @click="startCarPositionSave">
+          Save car positions (
+            <span v-if="savedDebugCarPositions.timer">stop</span>
+            <span v-else>start</span>
+            )
+        </button>
+      </p>
+    </div>
+
   </main>
 
 </template>
@@ -109,11 +62,12 @@
 <script setup>
 
 import { reactive, computed, watch } from 'vue'
-import {additionalMapData} from './resources/additionalMapData'
+import { additionalMapData } from './resources/additionalMapData'
 
-import SettingsModal from './components/SettingsModal.vue';
-import PitStrategy from './components/PitStrategy.vue';
+import MapComponent from './components/MapComponent.vue';
 import Positions from './components/Positions.vue';
+import PitStrategy from './components/PitStrategy.vue';
+import SettingsModal from './components/SettingsModal.vue';
 
 const socket = new WebSocket('ws://localhost:3000')
 
@@ -124,6 +78,7 @@ socket.onopen = (event) => {
 // socket.onmessage = (event) => {
 //   console.log("WebSocket message received:", event.value);
 // }
+// @TODO move to map component
 const mapOffset = reactive({
   x: 200,
   y: 200,
@@ -131,6 +86,7 @@ const mapOffset = reactive({
   width: 10,
   height: 10
 });
+// @TODO move to map component
 const mapSize = reactive({
   width: 500,
   height: 500
@@ -170,6 +126,7 @@ watch(settings, (settings) => {
   localStorage.setItem('settings', JSON.stringify(settings))
 })
 
+// @TODO move to map component
 // Load additional map data when session changes
 watch(session, (session) => {
   if (typeof additionalMapData[session.trackId] == 'undefined') {
@@ -194,43 +151,6 @@ const posSortedCars = computed(() => {
 
   return sortedCars.sort((a,b) => a.pos > b.pos)
 })
-
-const nameTagStyles = computed(() => {
-  return {
-    rotate: 0-mapOffset.rotate + 'deg'
-  }
-})
-
-function getMapOffsetStyles() {
-  return {
-    left: mapOffset.x + '%',
-    top: mapOffset.y + '%',
-    rotate: mapOffset.rotate + 'deg'
-  }
-}
-
-function getMapStyles() {
-  let output = {
-    width: mapSize.width + 'px',
-    height: mapSize.height + 'px'
-  }
-  
-  if (session.trackId) {
-    output.backgroundImage = "url('/maps/"+session.trackId+".png')"
-  }
-
-  return output
-}
-
-function getCarStyles(car) {
-  return {
-    backgroundColor: car.color,
-    zIndex: car.ai == 0 ? 1 : 0,
-    borderWidth: (car.ai == 0 ? 3 : 1) + 'px',
-    left: ((car.x * (mapOffset.height/100))) + '%',
-    top: ((car.y * (mapOffset.width/100))) + '%'
-  }
-}
 
 function updateCars(data) {
   for (const participant in data.data) {
@@ -273,6 +193,7 @@ socket.onmessage = (event) => {
   }
 }
 
+// @TODO move to map component
 const savedDebugCarPositions = reactive({
   timer: null,
   savedPositions: []
@@ -310,39 +231,4 @@ function getMockData(name) {
 .mainSection {
   display: flex;
 }
-
-.map {
-  position: relative;
-  width: 500px;
-  height: 500px;
-  border: solid 1px white;
-  background-position: center center;
-  background-size: contain;
-  /* overflow: hidden; */
-  z-index: -1;
-}
-
-.map .mapOffset {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-}
-
-.car {
-  display: block;
-  position: absolute;
-  background: white;
-  border-radius: 100%;
-  width: 15px;
-  height: 15px;
-  border: solid 1px black;
-  transform: translateX(-50%) translateY(-50%)
-}
-.car .tag {
-  position: absolute;
-  transform: translateX(18%) translateY(-150%);
-  transform-origin: left top;
-  z-index: 10;
-}
-
 </style>
