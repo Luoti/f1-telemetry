@@ -4,8 +4,9 @@
     <h1 class="title is-1 f1-font">{{ session.trackName }}</h1>
 
     <section class="mainSection columns">
-      <div class="column">
-        <div v-if="settings.show.map" class="map block has-background-black" :style="getMapStyles()">
+      <div class="column" v-if="settings.show.map">
+        <h2 class="title is-2 f1-font">Map</h2>
+        <div class="map block has-background-black" :style="getMapStyles()">
           <div class="mapOffset" :style="getMapOffsetStyles()">
             <div v-for="(car, index) in cars" v-bind:key="index" class="car" :style="getCarStyles(car)">
               <div class="tag is-dark f1-font" v-if="car.ai == 0" :style="nameTagStyles"> {{ car.name }} </div>
@@ -101,18 +102,18 @@
                 <th></th>
                 <th></th>
                 <th>Team</th>
-                <th class="has-text-right">Gap</th>
-                <th class="has-text-right">Penalty</th>
+                <th v-if="settings.show.positionsGap" class="has-text-right">Gap</th>
+                <th v-if="settings.show.positionsPenalty" class="has-text-right">Penalty</th>
               </tr>
             </thead>
             <TransitionGroup name="list" tag="tbody">
-              <tr v-for="(car, index) in posSortedCars" v-bind:key="car.origIndex" :class="{'is-selected': car.ai == 0}">
+              <tr v-for="(car) in posSortedCars" v-bind:key="car.origIndex" :class="{'is-selected': car.ai == 0}">
                 <td class="has-text-right">{{ car.pos }}</td>
                 <td><span v-if="car.driver !== 'DRV'">{{ car.driver }}</span></td>
                 <td>{{ car.name }}</td>
                 <td><span v-if="car.team !== 'INVALID'">{{ car.team }}</span></td>
-                <td class="has-text-right">{{ formatMilliseconds(car.deltaToFront) }}</td>
-                <td class="has-text-right"><span v-if="car.penalty > 0">{{ car.penalty }}</span></td>
+                <td v-if="settings.show.positionsGap" class="has-text-right">{{ formatMilliseconds(car.deltaToFront) }}</td>
+                <td v-if="settings.show.positionsPenalty" class="has-text-right"><span v-if="car.penalty > 0">{{ car.penalty }}</span></td>
               </tr>
             </TransitionGroup>
           </table>
@@ -164,9 +165,11 @@ const cars = reactive([]);
 
 const settings = reactive({
   show: {
-    mapControls: true,
     map: true,
+    mapControls: true,
     positions: true,
+    positionsGap: true,
+    positionsPenalty: true,
     pitStrategy: true,
   }
 });

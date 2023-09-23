@@ -9,25 +9,35 @@
                     <button class="delete" aria-label="close" @click="toggle"></button>
                 </header>
                 <section class="modal-card-body">
-                    <p>
+                    <p class="mb-2">
                         <label class="checkbox">
                             <input v-model="settings.show.map" type="checkbox"> Map
                         </label>
+                        <br/>
+                        <label class="checkbox">
+                            <input v-model="settings.show.mapControls" type="checkbox"> Map controls
+                        </label>
                     </p>
-                    <p>
+                    <p class="mb-2">
                         <label class="checkbox">
                             <input v-model="settings.show.positions" type="checkbox"> Positions
                         </label>
+                        <br/>
+                        <label class="checkbox">
+                            <input v-model="settings.show.positionsGap" type="checkbox"> Positions / Gap
+                        </label>
+                        <br/>
+                        <label class="checkbox">
+                            <input v-model="settings.show.positionsPenalty" type="checkbox"> Positions / Penalty
+                        </label>
                     </p>
-                    <p>
+                    <p class="mb-2">
                         <label class="checkbox">
                             <input v-model="settings.show.pitStrategy" type="checkbox"> Pit strategy
                         </label>
                     </p>
-                    <p>
-                        <label class="checkbox">
-                            <input v-model="settings.show.mapControls" type="checkbox"> Map controls
-                        </label>
+                    <p class="mb-2">
+
                     </p>
                 </section>
                 <footer class="modal-card-foot">
