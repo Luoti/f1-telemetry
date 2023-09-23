@@ -19,7 +19,13 @@
             <td><span v-if="car.team !== 'INVALID'">{{ car.team }}</span></td>
             <td v-if="settings.show.positionsGap" class="has-text-right">{{ formatMilliseconds(car.deltaToFront) }}</td>
             <td v-if="settings.show.positionsPenalty" class="has-text-right"><span v-if="car.penalty > 0">{{ car.penalty }}</span></td>
-            <td v-if="settings.show.positionsTyrecompound" class="has-text-right">{{ car.visualTyreCompound }}</td>
+            <td v-if="settings.show.positionsTyrecompound" class="has-text-centered">
+              <div class="tyre" :style="getTyreStyles(car.visualTyreCompound)">
+                <div class="tyre-content">
+                  {{ getTyreLetter(car.visualTyreCompound) }}
+                </div>
+              </div>
+            </td>
             </tr>
         </TransitionGroup>
         </table>
@@ -82,6 +88,44 @@ function getDriverStyles(car) {
   }
 }
 
+function getTyreStyles(tyre) {
+
+  let color = '';
+
+  switch (tyre) {
+    case 7:
+      color = 'green'; break
+    case 8:
+      color = 'blue'; break
+    case 16:
+      color = 'red'; break
+    case 17:
+      color = 'yellow'; break
+    case 18:
+      color = 'gray'; break
+  }
+
+  return {
+    color: color,
+    borderColor: color,
+  }
+}
+
+function getTyreLetter(tyre) {
+  switch (tyre) {
+    case 7:
+      return 'I';
+    case 8:
+      return 'W';
+    case 16:
+      return 'S';
+    case 17:
+      return 'M';
+    case 18:
+      return 'H';
+  }
+}
+
 function getDriverName(car) {
   if (car.driver !== 'DRV') {
     return car.driver
@@ -107,6 +151,29 @@ function getDriverName(car) {
 </script>
 
 <style scoped>
+
+.tyre {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  border: solid 5px black;
+  position:relative;
+  width: 50%;
+  padding-bottom:39%;
+  border-radius:50%;
+  font-family: serif;
+  font-weight: bold;
+}
+
+.tyre-content {
+  position: absolute;
+  top:50%;
+  left:50%;
+  transform: translate(-50%, -50%);
+  margin: 0;
+  font-size: 1.2rem;
+  text-align: center;
+}
 
 .list-move, /* apply transition to moving elements */
 .list-enter-active,
