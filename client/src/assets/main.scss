@@ -1,8 +1,8 @@
 @charset "utf-8";
 
 @font-face {
-    font-family: 'super-quick-formula';
-    src: url('./super-quick-formula/Super Quick Formula.ttf') format('truetype');
+    font-family: 'monospace-font';
+    src: url('./inconsolata/Inconsolata.otf') format('opentype');
 }
 
 $black: hsl(0, 0%, 4%);
@@ -22,8 +22,9 @@ $table-row-active-background-color: $purple;
 
 
 .f1-font {
-    font-family: super-quick-formula;
+    font-family: 'monospace-font';
     text-transform: uppercase;
+    font-weight: bold;
 }
 
 @import "../node_modules/bulma/bulma.sass";

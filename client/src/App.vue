@@ -1,7 +1,7 @@
 <template>
   <main class="container is-fluid">
 
-    <h1 class="title is-1 f1-font">{{ session.trackName }}</h1>
+    <h1 class="title is-2 f1-font">{{ session.trackName }}</h1>
 
     <section class="mainSection columns">
       <div class="column" v-if="settings.show.map">
@@ -19,7 +19,7 @@
         <positions :settings="settings" :pos-sorted-cars="posSortedCars" :session="session"></positions>
       </div>
 
-      <div v-if="settings.show.pitStrategy" class="column f1-font">
+      <div v-if="settings.show.pitStrategy" class="column">
         <pit-strategy :session="session" :cars="cars"></pit-strategy>
       </div>
     </section>

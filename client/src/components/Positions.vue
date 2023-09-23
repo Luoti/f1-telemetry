@@ -1,6 +1,5 @@
 <template>
     <section class="positions">
-        <h2 class="title is-2">Positions</h2>
         <table class="table">
         <thead>
             <tr>
@@ -162,14 +161,19 @@ function getDriverName(car) {
 
 <style scoped>
 
+.table {
+  font-size: 1.6rem;
+  line-height: 1.6rem;
+}
+
 .tyre {
   display: block;
   margin-left: auto;
   margin-right: auto;
   border: solid 5px black;
   position: relative;
-  width: 50%;
-  padding-bottom: 39%;
+  width: 30px;
+  height: 30px;
   border-radius: 50%;
   font-family: serif;
   font-weight: bold;
@@ -181,7 +185,7 @@ function getDriverName(car) {
   left: 50%;
   transform: translate(-50%, -50%);
   margin: 0;
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   text-align: center;
 }
 

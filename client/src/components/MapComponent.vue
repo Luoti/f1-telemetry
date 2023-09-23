@@ -1,6 +1,5 @@
 <template>
     <section>
-        <h2 class="title is-2 f1-font">Map</h2>
         <div class="map block has-background-black" :style="getMapStyles()">
           <div class="mapOffset" :style="getMapOffsetStyles()">
             <div v-for="(car, index) in cars" v-bind:key="index" class="car" :style="getCarStyles(car)">
