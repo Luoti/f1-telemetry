@@ -15,7 +15,7 @@
                 Rejoin position: <span class="has-text-primary">{{ session.pitStop.rejoinPosition }}</span>
             </p>
             <p>
-                Current tyres: <span v-if="cars[session.playerCarIndex]" class="has-text-primary">{{ cars[session.playerCarIndex].tyreAgeLaps }}</span> laps old
+                Current tyres: <span v-if="cars[session.player1CarIndex]" class="has-text-primary">{{ cars[session.player1CarIndex].tyreAgeLaps }}</span> laps old
             </p>
         </div>
     </section>

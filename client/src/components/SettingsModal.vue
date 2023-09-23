@@ -9,36 +9,54 @@
                     <button class="delete" aria-label="close" @click="toggle"></button>
                 </header>
                 <section class="modal-card-body">
-                    <p class="mb-2">
-                        <label class="checkbox">
-                            <input v-model="settings.show.map" type="checkbox"> Map
-                        </label>
-                        <br/>
-                        <label class="checkbox">
-                            <input v-model="settings.show.mapControls" type="checkbox"> Map controls
-                        </label>
-                    </p>
-                    <p class="mb-2">
-                        <label class="checkbox">
-                            <input v-model="settings.show.positions" type="checkbox"> Positions
-                        </label>
-                        <br/>
-                        <label class="checkbox">
-                            <input v-model="settings.show.positionsGap" type="checkbox"> Positions / Gap
-                        </label>
-                        <br/>
-                        <label class="checkbox">
+                    <div class="field">
+                        <div class="control">
+                            <label class="checkbox">
+                              <input v-model="settings.show.map" type="checkbox"> Map
+                            </label>
+                        </div>
+                        <div class="control">
+                            <label class="checkbox">
+                              <input v-model="settings.show.mapControls" type="checkbox"> Map controls
+                            </label>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <div class="control">
+                            <label class="checkbox">
+                              <input v-model="settings.show.positions" type="checkbox"> Positions
+                            </label>
+                        </div>
+                        <div class="control">
+                            <label class="checkbox">
+                                <input v-model="settings.show.positionsGap" type="checkbox"> Positions / Gap
+                            </label>
+                        </div>
+                        <div class="control">
+                            <label class="checkbox">
                             <input v-model="settings.show.positionsPenalty" type="checkbox"> Positions / Penalty
-                        </label>
-                    </p>
-                    <p class="mb-2">
-                        <label class="checkbox">
-                            <input v-model="settings.show.pitStrategy" type="checkbox"> Pit strategy
-                        </label>
-                    </p>
-                    <p class="mb-2">
-
-                    </p>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <div class="control">
+                            <label class="checkbox">
+                                <input v-model="settings.show.pitStrategy" type="checkbox"> Pit strategy
+                            </label>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label class="label">Player 1 abbreviation</label>
+                        <div class="control">
+                            <input class="input is-uppercase" type="text">
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label class="label">Player 2 abbreviation</label>
+                        <div class="control">
+                            <input class="input is-uppercase" type="text">
+                        </div>
+                    </div>
                 </section>
                 <footer class="modal-card-foot">
                     <button class="button" @click="toggle">Close</button>

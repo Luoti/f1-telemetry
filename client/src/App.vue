@@ -100,7 +100,6 @@
               <tr>
                 <th class="has-text-right">Pos</th>
                 <th></th>
-                <th></th>
                 <th>Team</th>
                 <th v-if="settings.show.positionsGap" class="has-text-right">Gap</th>
                 <th v-if="settings.show.positionsPenalty" class="has-text-right">Penalty</th>
@@ -109,8 +108,7 @@
             <TransitionGroup name="list" tag="tbody">
               <tr v-for="(car) in posSortedCars" v-bind:key="car.origIndex" :class="{'is-selected': car.ai == 0}">
                 <td class="has-text-right">{{ car.pos }}</td>
-                <td><span v-if="car.driver !== 'DRV'">{{ car.driver }}</span></td>
-                <td>{{ car.name }}</td>
+                <td>{{ getDriverName(car, car.origIndex) }}</td>
                 <td><span v-if="car.team !== 'INVALID'">{{ car.team }}</span></td>
                 <td v-if="settings.show.positionsGap" class="has-text-right">{{ formatMilliseconds(car.deltaToFront) }}</td>
                 <td v-if="settings.show.positionsPenalty" class="has-text-right"><span v-if="car.penalty > 0">{{ car.penalty }}</span></td>
@@ -164,6 +162,8 @@ const session = reactive({});
 const cars = reactive([]);
 
 const settings = reactive({
+  player1Abbreviation: '',
+  player2Abbreviation: '',
   show: {
     map: true,
     mapControls: true,
@@ -234,6 +234,28 @@ function getCarStyles(car) {
     left: ((car.x * (mapOffset.height/100))) + '%',
     top: ((car.y * (mapOffset.width/100))) + '%'
   }
+}
+
+function getDriverName(car, index) {
+  if (car.driver !== 'DRV') {
+    return car.driver
+  }
+
+  if (
+    index == session.player1CarIndex &&
+    settings.player1Abbreviation != ''
+  ) {
+    return settings.player1Abbreviation
+  }
+
+  if (
+    index == session.player2CarIndex &&
+    settings.player2Abbreviation != ''
+  ) {
+    return settings.player2Abbreviation
+  }
+
+  return car.name
 }
 
 function updateCars(data) {

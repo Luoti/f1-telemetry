@@ -61,8 +61,8 @@ class Parser
       data : {
         trackId: data.m_trackId,
         trackName: constants.TRACKS[data.m_trackId]?.name ?? 'Unknown',
-        playerCarIndex: data.m_header.m_playerCarIndex,
-        secondPlayerCarIndex: data.m_header.m_secondaryPlayerCarIndex,
+        player1CarIndex: data.m_header.m_playerCarIndex,
+        player2CarIndex: data.m_header.m_secondaryPlayerCarIndex,
         pitStop: {
           windowIdealLap: data.m_pitStopWindowIdealLap,
           windowLatestLap: data.m_pitStopWindowLatestLap,
