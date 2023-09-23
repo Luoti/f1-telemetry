@@ -83,6 +83,7 @@ class Parser
     for (const participant in data.m_carStatusData) {
       response.data.push({
         tyreAgeLaps: data.m_carStatusData[participant].m_tyresAgeLaps,
+        visualTyreCompound: data.m_carStatusData[participant].m_visualTyreCompound
       });
     }
   

@@ -37,6 +37,11 @@
                             <input v-model="settings.show.positionsPenalty" type="checkbox"> Positions / Penalty
                             </label>
                         </div>
+                        <div class="control">
+                            <label class="checkbox">
+                            <input v-model="settings.show.positionsTyrecompound" type="checkbox"> Positions / Tyre
+                            </label>
+                        </div>
                     </div>
                     <div class="field">
                         <div class="control">

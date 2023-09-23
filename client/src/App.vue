@@ -103,6 +103,7 @@
                 <th>Team</th>
                 <th v-if="settings.show.positionsGap" class="has-text-right">Gap</th>
                 <th v-if="settings.show.positionsPenalty" class="has-text-right">Penalty</th>
+                <th v-if="settings.show.positionsTyrecompound" class="has-text-right">Tyre</th>
               </tr>
             </thead>
             <TransitionGroup name="list" tag="tbody">
@@ -112,6 +113,7 @@
                 <td><span v-if="car.team !== 'INVALID'">{{ car.team }}</span></td>
                 <td v-if="settings.show.positionsGap" class="has-text-right">{{ formatMilliseconds(car.deltaToFront) }}</td>
                 <td v-if="settings.show.positionsPenalty" class="has-text-right"><span v-if="car.penalty > 0">{{ car.penalty }}</span></td>
+                <td v-if="settings.show.positionsTyrecompound" class="has-text-right">{{ car.visualTyreCompound }}</td>
               </tr>
             </TransitionGroup>
           </table>
