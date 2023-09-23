@@ -53,6 +53,18 @@
             )
         </button>
       </p>
+      <p class="control">
+        <button class="button" @click="connectWebSocket">Connect</button>
+      </p>
+      <div class="field columns">
+        <div class="column">
+            <label class="label">Server address (default localhost)</label>
+            <div class="control">
+                <input v-model="settings.player2Abbreviation" class="input is-uppercase" type="text">
+            </div>
+        </div>
+      </div>
+
     </div>
 
   </main>
@@ -68,12 +80,6 @@ import MapComponent from './components/MapComponent.vue';
 import Positions from './components/Positions.vue';
 import PitStrategy from './components/PitStrategy.vue';
 import SettingsModal from './components/SettingsModal.vue';
-
-const socket = new WebSocket('ws://localhost:3000')
-
-socket.onopen = (event) => {
-  console.log("WebSocket connection opened:", event);
-}
 
 // socket.onmessage = (event) => {
 //   console.log("WebSocket message received:", event.value);
@@ -94,6 +100,9 @@ const mapSize = reactive({
 
 const session = reactive({});
 const cars = reactive([]);
+
+var socket = null
+const websocketHost = reactive('localhost');
 
 const settings = reactive({
   player1Abbreviation: '',
@@ -169,27 +178,35 @@ function updateSession(data) {
   }
 }
 
-socket.onerror = (error) => {
-  console.log("WebSocket error:", error);
-}
+function connectWebSocket() {
+  socket = new WebSocket('ws://'+websocketHost+':3000')
 
-socket.onclose = (event) => {
-  console.log("WebSocket connection closed:", event.code);
-}
+  socket.onopen = (event) => {
+    console.log("WebSocket connection opened:", event);
+  }
 
-socket.onmessage = (event) => {
-  const message = JSON.parse(event.data);
-  
-  if (message.packetID == 'participants') {
-    updateCars(message)
-  } else if (message.packetID == 'motion') {
-    updateCars(message)
-  } else if (message.packetID == 'lapData') {
-    updateCars(message)
-  } else if (message.packetID == 'carStatus') {
-    updateCars(message)
-  } else if (message.packetID == 'session') {
-    updateSession(message)
+  socket.onerror = (error) => {
+    console.log("WebSocket error:", error);
+  }
+
+  socket.onclose = (event) => {
+    console.log("WebSocket connection closed:", event.code);
+  }
+
+  socket.onmessage = (event) => {
+    const message = JSON.parse(event.data);
+    
+    if (message.packetID == 'participants') {
+      updateCars(message)
+    } else if (message.packetID == 'motion') {
+      updateCars(message)
+    } else if (message.packetID == 'lapData') {
+      updateCars(message)
+    } else if (message.packetID == 'carStatus') {
+      updateCars(message)
+    } else if (message.packetID == 'session') {
+      updateSession(message)
+    }
   }
 }
 
