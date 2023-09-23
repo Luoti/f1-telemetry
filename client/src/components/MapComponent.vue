@@ -3,7 +3,7 @@
         <div class="map block has-background-black" :style="getMapStyles()">
           <div class="mapOffset" :style="getMapOffsetStyles()">
             <div v-for="(car, index) in cars" v-bind:key="index" class="car" :style="getCarStyles(car)">
-              <div class="tag is-dark f1-font" v-if="car.ai == 0" :style="nameTagStyles"> {{ car.name }} </div>
+              <div class="tag is-dark f1-font" v-if="car.ai == 0" :style="nameTagStyles"> {{ getDriverName(car) }} </div>
             </div>
 
             <div v-for="(car, index) in savedDebugCarPositions.savedPositions" v-bind:key="index" class="car" :style="getCarStyles(car)"> </div>
@@ -118,6 +118,29 @@ function getCarStyles(car) {
     left: ((car.x * (props.mapOffset.height/100))) + '%',
     top: ((car.y * (props.mapOffset.width/100))) + '%'
   }
+}
+
+// @TODO this function is specified twice. COMBINE!
+function getDriverName(car) {
+  if (car.driver !== 'DRV') {
+    return car.driver
+  }
+
+  if (
+    car.origIndex == props.session.player1CarIndex &&
+    props.settings.player1Abbreviation != ''
+  ) {
+    return props.settings.player1Abbreviation
+  }
+
+  if (
+    car.origIndex == props.session.player2CarIndex &&
+    props.settings.player2Abbreviation != ''
+  ) {
+    return props.settings.player2Abbreviation
+  }
+
+  return car.name
 }
 
 </script>
