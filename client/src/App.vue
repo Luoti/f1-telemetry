@@ -93,36 +93,11 @@
       </div>
 
       <div v-if="settings.show.positions" class="column f1-font">
-        <div class="positions">
-          <h2 class="title is-2">Positions</h2>
-          <table class="table">
-            <thead>
-              <tr>
-                <th class="has-text-right">Pos</th>
-                <th></th>
-                <th>Team</th>
-                <th v-if="settings.show.positionsGap" class="has-text-right">Gap</th>
-                <th v-if="settings.show.positionsPenalty" class="has-text-right">Penalty</th>
-                <th v-if="settings.show.positionsTyrecompound" class="has-text-right">Tyre</th>
-              </tr>
-            </thead>
-            <TransitionGroup name="list" tag="tbody">
-              <tr v-for="(car) in posSortedCars" v-bind:key="car.origIndex" :class="{'is-selected': car.ai == 0}" :style="getDriverStyles(car)">
-                <td class="has-text-right">{{ car.pos }}</td>
-                <td>{{ getDriverName(car) }}</td>
-                <td><span v-if="car.team !== 'INVALID'">{{ car.team }}</span></td>
-                <td v-if="settings.show.positionsGap" class="has-text-right">{{ formatMilliseconds(car.deltaToFront) }}</td>
-                <td v-if="settings.show.positionsPenalty" class="has-text-right"><span v-if="car.penalty > 0">{{ car.penalty }}</span></td>
-                <td v-if="settings.show.positionsTyrecompound" class="has-text-right">{{ car.visualTyreCompound }}</td>
-              </tr>
-            </TransitionGroup>
-          </table>
-        </div>
+        <positions :settings="settings" :pos-sorted-cars="posSortedCars" :session="session"></positions>
       </div>
 
       <div v-if="settings.show.pitStrategy" class="column f1-font">
         <pit-strategy :session="session" :cars="cars"></pit-strategy>
-        
       </div>
     </section>
   
@@ -138,6 +113,7 @@ import {additionalMapData} from './resources/additionalMapData'
 
 import SettingsModal from './components/SettingsModal.vue';
 import PitStrategy from './components/PitStrategy.vue';
+import Positions from './components/Positions.vue';
 
 const socket = new WebSocket('ws://localhost:3000')
 
@@ -256,48 +232,6 @@ function getCarStyles(car) {
   }
 }
 
-function getDriverName(car) {
-  if (car.driver !== 'DRV') {
-    return car.driver
-  }
-
-  if (
-    car.origIndex == session.player1CarIndex &&
-    settings.player1Abbreviation != ''
-  ) {
-    return settings.player1Abbreviation
-  }
-
-  if (
-    car.origIndex == session.player2CarIndex &&
-    settings.player2Abbreviation != ''
-  ) {
-    return settings.player2Abbreviation
-  }
-
-  return car.name
-}
-
-function getDriverStyles(car) {
-  if (car.ai == 1) {
-    return;
-  }
-
-  if (
-    car.origIndex == session.player1CarIndex &&
-    settings.player1Color != ''
-  ) {
-    return { backgroundColor: settings.player1Color }
-  }
-
-  if (
-    car.origIndex == session.player2CarIndex &&
-    settings.player2Color != ''
-  ) {
-    return { backgroundColor: settings.player2Color }
-  }
-}
-
 function updateCars(data) {
   for (const participant in data.data) {
     if (typeof cars[participant] === 'undefined') {
@@ -313,28 +247,6 @@ function updateSession(data) {
   for (const prop in data.data) {
     session[prop] = data.data[prop];
   }
-}
-
-function formatMilliseconds(milliseconds) {
-  if (isNaN(milliseconds) || milliseconds == 0) {
-    return ''
-  }
-
-  let formattedTime = ''
-  const totalSeconds = Math.floor(milliseconds / 1000);
-  const minutes = Math.floor(totalSeconds / 60);
-
-  if (minutes > 0) {
-    formattedTime += minutes + ':'
-  }
-
-  const seconds = totalSeconds % 60;
-  const remainingMilliseconds = milliseconds % 1000;
-
-  // Format the result as a string
-  formattedTime += `${seconds.toString().padStart(2, 0)}.${remainingMilliseconds.toString().padEnd(3, 0)}`;
-
-  return formattedTime;
 }
 
 socket.onerror = (error) => {
@@ -431,24 +343,6 @@ function getMockData(name) {
   transform: translateX(18%) translateY(-150%);
   transform-origin: left top;
   z-index: 10;
-}
-
-.list-move, /* apply transition to moving elements */
-.list-enter-active,
-.list-leave-active {
-  transition: all 0.5s ease;
-}
-
-.list-enter-from,
-.list-leave-to {
-  opacity: 0;
-  transform: translateX(30px);
-}
-
-/* ensure leaving items are taken out of layout flow so that moving
-   animations can be calculated correctly. */
-.list-leave-active {
-  position: absolute;
 }
 
 </style>
