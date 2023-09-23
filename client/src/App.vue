@@ -1,7 +1,7 @@
 <template>
   <main class="container is-fluid">
 
-    <h1 class="title is-1 f1-font">{{ track.name }}</h1>
+    <h1 class="title is-1 f1-font">{{ session.trackName }}</h1>
 
     <section class="mainSection columns">
       <div class="column">
@@ -25,7 +25,7 @@
               <p class="is-size-6">Map Offset</p>
             </div>
             <div class="panel-block is-horizontal">
-              <p class="control">
+              <div class="control">
                 <div class="columns">
                   <div class="column is-narrow"><div class="field-label is-normal"><label class="label">X:</label></div></div>
                   <div class="column"><div class="field-body"><input class="input" type="number" step="0.5" v-model="mapOffset.x" /></div></div>
@@ -42,21 +42,21 @@
                   <div class="column is-narrow"><div class="field-label is-normal"><label class="label">Rotate:</label></div></div>
                   <div class="column"><div class="field-body"><input class="input" type="number" step="0.5" v-model="mapOffset.rotate" /></div></div>
                 </div>
-              </p>
+              </div>
             </div>
 
             <div class="panel-block">
               <p class="is-size-6">Map Size</p>
             </div>
             <div class="panel-block is-horizontal">
-              <p class="control">
+              <div class="control">
                 <div class="columns">
                   <div class="column is-narrow"><div class="field-label is-normal"><label class="label">Width:</label></div></div>
                   <div class="column"><div class="field-body"><input class="input" type="number" step="0.5" v-model="mapSize.width" /></div></div>
                   <div class="column is-narrow"><div class="field-label is-normal"><label class="label">Height:</label></div></div>
                   <div class="column"><div class="field-body"><input class="input" type="number" step="0.5" v-model="mapSize.height" /></div></div>
                 </div>
-              </p>
+              </div>
             </div>
           </nav>
 
@@ -69,6 +69,9 @@
             </p>
             <p class="control">
               <button class="button" @click="getMockData('session')">Session</button>
+            </p>
+            <p class="control">
+              <button class="button" @click="getMockData('carstatus')">CarStatus</button>
             </p>
             <p class="control">
               <button class="button" @click="getMockData('lapdata1')">lapdata1</button>
@@ -115,9 +118,14 @@
           </table>
         </div>
       </div>
+
+      <div v-if="settings.show.pitStrategy" class="column f1-font">
+        <pit-strategy :session="session" :cars="cars"></pit-strategy>
+        
+      </div>
     </section>
   
-    <SettingsModal :settings="settings"></SettingsModal>
+    <settings-modal :settings="settings"></settings-modal>
   </main>
 
 </template>
@@ -128,6 +136,7 @@ import { reactive, computed, watch } from 'vue'
 import {additionalMapData} from './resources/additionalMapData'
 
 import SettingsModal from './components/SettingsModal.vue';
+import PitStrategy from './components/PitStrategy.vue';
 
 const socket = new WebSocket('ws://localhost:3000')
 
@@ -149,31 +158,30 @@ const mapSize = reactive({
   width: 500,
   height: 500
 });
-const track = reactive({
-  id: null,
-  name: 'Not loaded'
-});
 
+const session = reactive({});
 const cars = reactive([]);
 
 const settings = reactive({
   show: {
     mapControls: true,
     map: true,
-    positions: true
+    positions: true,
+    pitStrategy: true,
   }
 });
 
-// Load additional map data when track changes
-watch(track, (track) => {
-  console.log(track)
-
-  for (let prop in additionalMapData[track.id].mapOffset) {
-    mapOffset[prop] = additionalMapData[track.id].mapOffset[prop]
+// Load additional map data when session changes
+watch(session, (session) => {
+  if (typeof additionalMapData[session.trackId] == 'undefined') {
+    return
   }
 
-  for (let prop in additionalMapData[track.id].mapSize) {
-    mapSize[prop] = additionalMapData[track.id].mapSize[prop]
+  for (let prop in additionalMapData[session.trackId].mapOffset) {
+    mapOffset[prop] = additionalMapData[session.trackId].mapOffset[prop]
+  }
+  for (let prop in additionalMapData[session.trackId].mapSize) {
+    mapSize[prop] = additionalMapData[session.trackId].mapSize[prop]
   }
 })
 
@@ -208,8 +216,8 @@ function getMapStyles() {
     height: mapSize.height + 'px'
   }
   
-  if (track.id) {
-    output.backgroundImage = "url('/maps/"+track.id+".png')"
+  if (session.trackId) {
+    output.backgroundImage = "url('/maps/"+session.trackId+".png')"
   }
 
   return output
@@ -236,6 +244,12 @@ function updateCars(data) {
   }
 }
 
+function updateSession(data) {
+  for (const prop in data.data) {
+    session[prop] = data.data[prop];
+  }
+}
+
 function formatMilliseconds(milliseconds) {
   if (isNaN(milliseconds) || milliseconds == 0) {
     return ''
@@ -258,11 +272,6 @@ function formatMilliseconds(milliseconds) {
   return formattedTime;
 }
 
-function updateSession(data) {
-  track.id = data.data.id
-  track.name = data.data.name
-}
-
 socket.onerror = (error) => {
   console.log("WebSocket error:", error);
 }
@@ -280,6 +289,8 @@ socket.onmessage = (event) => {
     updateCars(message)
   } else if (message.packetID == 'lapData') {
     updateCars(message)
+  } else if (message.packetID == 'carStatus') {
+    updateCars(message)
   } else if (message.packetID == 'session') {
     updateSession(message)
   }
@@ -291,7 +302,6 @@ const savedDebugCarPositions = reactive({
 });
 
 function startCarPositionSave() {
-  console.log(savedDebugCarPositions.timer)
   if (savedDebugCarPositions.timer !== null) {
     clearInterval(savedDebugCarPositions.timer)
     savedDebugCarPositions.timer = null

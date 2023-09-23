@@ -47,6 +47,8 @@ websocketServer.on('connection', (socket) => {
       socket.send(JSON.stringify(Parser.parseLapData(mocks.lapData1)));
     } else if (message === 'lapdata2') {
       socket.send(JSON.stringify(Parser.parseLapData(mocks.lapData2)));
+    } else if (message === 'carstatus') {
+      socket.send(JSON.stringify(Parser.parseCarStatus(mocks.carStatus)));
     }
     // Broadcast the message to all connected clients
     // websocketServer.clients.forEach(function each(client) {
@@ -62,12 +64,10 @@ websocketServer.on('connection', (socket) => {
     console.log('Client disconnected');
   });
 
-  
-  // f1Client.on(PACKETS.event, console.log);
+
   f1Client.on(PACKETS.motion, function(data) {
     socket.send(JSON.stringify(Parser.parseMotion(data)))
   });
-  // f1Client.on(PACKETS.carSetups, console.log);
   f1Client.on(PACKETS.lapData, function(data) {
     socket.send(JSON.stringify(Parser.parseLapData(data)))
   });
@@ -77,8 +77,12 @@ websocketServer.on('connection', (socket) => {
   f1Client.on(PACKETS.participants, function(data) {
     socket.send(JSON.stringify(Parser.parseParticipants(data)))
   });
+  f1Client.on(PACKETS.carStatus, function(data) {
+    socket.send(JSON.stringify(Parser.parseCarStatus(data)))
+  });
+  // f1Client.on(PACKETS.event, console.log);
+  // f1Client.on(PACKETS.carSetups, console.log);
   // f1Client.on(PACKETS.carTelemetry, console.log);
-  // f1Client.on(PACKETS.carStatus, console.log);
   // f1Client.on(PACKETS.finalClassification, console.log);
   // f1Client.on(PACKETS.lobbyInfo, console.log);
   // f1Client.on(PACKETS.carDamage, console.log);

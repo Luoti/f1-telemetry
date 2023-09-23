@@ -21,6 +21,11 @@
                     </p>
                     <p>
                         <label class="checkbox">
+                            <input v-model="settings.show.pitStrategy" type="checkbox"> Pit strategy
+                        </label>
+                    </p>
+                    <p>
+                        <label class="checkbox">
                             <input v-model="settings.show.mapControls" type="checkbox"> Map controls
                         </label>
                     </p>

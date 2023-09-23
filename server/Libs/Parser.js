@@ -11,6 +11,7 @@ class Parser
       response.data.push({
         ai: data.m_participants[participant].m_aiControlled,
         driver: constants.DRIVERS[data.m_participants[participant].m_driverId]?.abbreviation ?? '',
+        networkId: data.m_participants[participant].m_networkId,
         name: data.m_participants[participant].m_name,
         // nationality: constants.NATIONALITIES[data.m_participants[participant].m_nationality],
         number: data.m_participants[participant].m_raceNumber,
@@ -58,10 +59,32 @@ class Parser
     let response = {
       packetID: 'session',
       data : {
-        id: data.m_trackId,
-        name: constants.TRACKS[data.m_trackId]?.name ?? 'Unknown'
+        trackId: data.m_trackId,
+        trackName: constants.TRACKS[data.m_trackId]?.name ?? 'Unknown',
+        playerCarIndex: data.m_header.m_playerCarIndex,
+        secondPlayerCarIndex: data.m_header.m_secondaryPlayerCarIndex,
+        pitStop: {
+          windowIdealLap: data.m_pitStopWindowIdealLap,
+          windowLatestLap: data.m_pitStopWindowLatestLap,
+          rejoinPosition: data.m_pitStopRejoinPosition,
+        }
       }
     };
+  
+    return response
+  }
+
+  static parseCarStatus(data) {
+    let response = {
+      packetID: 'carStatus',
+      data : []
+    };
+
+    for (const participant in data.m_carStatusData) {
+      response.data.push({
+        tyreAgeLaps: data.m_carStatusData[participant].m_tyresAgeLaps,
+      });
+    }
   
     return response
   }
