@@ -60,7 +60,7 @@
         <div class="column">
             <label class="label">Server address (default localhost)</label>
             <div class="control">
-                <input v-model="settings.player2Abbreviation" class="input is-uppercase" type="text">
+                <input v-model="websocketHost.value" class="input is-uppercase" type="text">
             </div>
         </div>
       </div>
@@ -102,7 +102,9 @@ const session = reactive({});
 const cars = reactive([]);
 
 var socket = null
-const websocketHost = reactive('localhost');
+const websocketHost = reactive({
+  value: 'localhost'
+});
 
 const settings = reactive({
   player1Abbreviation: '',
@@ -179,7 +181,7 @@ function updateSession(data) {
 }
 
 function connectWebSocket() {
-  socket = new WebSocket('ws://'+websocketHost+':3000')
+  socket = new WebSocket('ws://'+websocketHost.value+':3000')
 
   socket.onopen = (event) => {
     console.log("WebSocket connection opened:", event);
