@@ -127,14 +127,14 @@ function getDriverName(car) {
   }
 
   if (
-    car.origIndex == props.session.player1CarIndex &&
+    car.networkId === 0 &&
     props.settings.player1Abbreviation != ''
   ) {
     return props.settings.player1Abbreviation
   }
 
   if (
-    car.origIndex == props.session.player2CarIndex &&
+    car.networkId === 1 &&
     props.settings.player2Abbreviation != ''
   ) {
     return props.settings.player2Abbreviation
