@@ -107,9 +107,9 @@
               </tr>
             </thead>
             <TransitionGroup name="list" tag="tbody">
-              <tr v-for="(car) in posSortedCars" v-bind:key="car.origIndex" :class="{'is-selected': car.ai == 0}">
+              <tr v-for="(car) in posSortedCars" v-bind:key="car.origIndex" :class="{'is-selected': car.ai == 0}" :style="getDriverStyles(car)">
                 <td class="has-text-right">{{ car.pos }}</td>
-                <td>{{ getDriverName(car, car.origIndex) }}</td>
+                <td>{{ getDriverName(car) }}</td>
                 <td><span v-if="car.team !== 'INVALID'">{{ car.team }}</span></td>
                 <td v-if="settings.show.positionsGap" class="has-text-right">{{ formatMilliseconds(car.deltaToFront) }}</td>
                 <td v-if="settings.show.positionsPenalty" class="has-text-right"><span v-if="car.penalty > 0">{{ car.penalty }}</span></td>
@@ -166,6 +166,8 @@ const cars = reactive([]);
 const settings = reactive({
   player1Abbreviation: '',
   player2Abbreviation: '',
+  player1Color: '',
+  player2Color: '',
   show: {
     map: true,
     mapControls: true,
@@ -254,26 +256,46 @@ function getCarStyles(car) {
   }
 }
 
-function getDriverName(car, index) {
+function getDriverName(car) {
   if (car.driver !== 'DRV') {
     return car.driver
   }
 
   if (
-    index == session.player1CarIndex &&
+    car.origIndex == session.player1CarIndex &&
     settings.player1Abbreviation != ''
   ) {
     return settings.player1Abbreviation
   }
 
   if (
-    index == session.player2CarIndex &&
+    car.origIndex == session.player2CarIndex &&
     settings.player2Abbreviation != ''
   ) {
     return settings.player2Abbreviation
   }
 
   return car.name
+}
+
+function getDriverStyles(car) {
+  if (car.ai == 1) {
+    return;
+  }
+
+  if (
+    car.origIndex == session.player1CarIndex &&
+    settings.player1Color != ''
+  ) {
+    return { backgroundColor: settings.player1Color }
+  }
+
+  if (
+    car.origIndex == session.player2CarIndex &&
+    settings.player2Color != ''
+  ) {
+    return { backgroundColor: settings.player2Color }
+  }
 }
 
 function updateCars(data) {

@@ -50,16 +50,32 @@
                             </label>
                         </div>
                     </div>
-                    <div class="field">
-                        <label class="label">Player 1 abbreviation</label>
-                        <div class="control">
-                            <input v-model="settings.player1Abbreviation" class="input is-uppercase" type="text">
+                    <div class="field columns">
+                        <div class="column">
+                            <label class="label">Player 1 abbreviation</label>
+                            <div class="control">
+                                <input v-model="settings.player1Abbreviation" class="input is-uppercase" type="text">
+                            </div>
+                        </div>
+                        <div class="column">
+                            <label class="label">Player 1 Color</label>
+                            <div class="control">
+                                <input v-model="settings.player1Color" class="input is-uppercase" type="text">
+                            </div>
                         </div>
                     </div>
-                    <div class="field">
-                        <label class="label">Player 2 abbreviation</label>
-                        <div class="control">
-                            <input v-model="settings.player2Abbreviation" class="input is-uppercase" type="text">
+                    <div class="field columns">
+                        <div class="column">
+                            <label class="label">Player 2 abbreviation</label>
+                            <div class="control">
+                                <input v-model="settings.player2Abbreviation" class="input is-uppercase" type="text">
+                            </div>
+                        </div>
+                        <div class="column">
+                            <label class="label">Player 2 Color</label>
+                            <div class="control">
+                                <input v-model="settings.player2Color" class="input is-uppercase" type="text">
+                            </div>
                         </div>
                     </div>
                 </section>
