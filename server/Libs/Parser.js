@@ -15,7 +15,8 @@ class Parser
         name: data.m_participants[participant].m_name,
         // nationality: constants.NATIONALITIES[data.m_participants[participant].m_nationality],
         number: data.m_participants[participant].m_raceNumber,
-        team: constants.TEAMS[data.m_participants[participant].m_teamId]?.name ?? '',
+        teamName: constants.TEAMS[data.m_participants[participant].m_teamId]?.name ?? '',
+        teamId: data.m_participants[participant].m_teamId ?? '',
         color: constants.TEAMS[data.m_participants[participant].m_teamId]?.color ?? ''
       });
     }

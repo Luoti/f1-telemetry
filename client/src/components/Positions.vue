@@ -16,7 +16,7 @@
             <tr v-for="(car) in posSortedCars" v-bind:key="car.origIndex" :class="{'is-selected': car.ai == 0}" :style="getDriverStyles(car)">
             <td class="has-text-right">{{ car.pos }}</td>
             <td>{{ getDriverName(car) }}</td>
-            <td><span v-if="car.team !== 'INVALID'">{{ car.team }}</span></td>
+            <td class="team" :style="getTeamStyles(car.teamId)"></td>
             <td v-if="settings.show.positionsGap" class="has-text-right">{{ formatMilliseconds(car.deltaToFront) }}</td>
             <td v-if="settings.show.positionsPenalty" class="has-text-right"><span v-if="car.penalty > 0">{{ car.penalty }}</span></td>
             <td v-if="settings.show.positionsTyrecompound" class="has-text-centered">
@@ -126,6 +126,16 @@ function getTyreLetter(tyre) {
   }
 }
 
+function getTeamStyles(teamId) {
+  let output = {}
+
+  if (teamId) {
+    output.backgroundImage = "url('/teams/icons/"+teamId+".png')"
+  }
+
+  return output
+}
+
 function getDriverName(car) {
   if (car.driver !== 'DRV') {
     return car.driver
@@ -157,22 +167,28 @@ function getDriverName(car) {
   margin-left: auto;
   margin-right: auto;
   border: solid 5px black;
-  position:relative;
+  position: relative;
   width: 50%;
-  padding-bottom:39%;
-  border-radius:50%;
+  padding-bottom: 39%;
+  border-radius: 50%;
   font-family: serif;
   font-weight: bold;
 }
 
 .tyre-content {
   position: absolute;
-  top:50%;
-  left:50%;
+  top: 50%;
+  left: 50%;
   transform: translate(-50%, -50%);
   margin: 0;
   font-size: 1.2rem;
   text-align: center;
+}
+
+td.team {
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center center;
 }
 
 .list-move, /* apply transition to moving elements */
