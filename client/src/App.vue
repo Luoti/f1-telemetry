@@ -5,7 +5,7 @@
 
     <section class="mainSection columns">
       <div class="column">
-        <div class="map block has-background-black" :style="getMapStyles()">
+        <div v-if="settings.show.map" class="map block has-background-black" :style="getMapStyles()">
           <div class="mapOffset" :style="getMapOffsetStyles()">
             <div v-for="(car, index) in cars" v-bind:key="index" class="car" :style="getCarStyles(car)">
               <div class="tag is-dark f1-font" v-if="car.ai == 0" :style="nameTagStyles"> {{ car.name }} </div>
@@ -15,7 +15,7 @@
           </div>
         </div>
 
-        <div class="block p-3">
+        <div v-if="settings.show.mapControls" class="block p-3">
           <nav class="panel">
             <p class="panel-heading">
               Map controls
@@ -88,7 +88,7 @@
         </div>
       </div>
 
-      <div class="column f1-font">
+      <div v-if="settings.show.positions" class="column f1-font">
         <div class="positions">
           <h2 class="title is-2">Positions</h2>
           <table class="table">
@@ -117,13 +117,17 @@
       </div>
     </section>
   
+    <SettingsModal :settings="settings"></SettingsModal>
   </main>
+
 </template>
 
 <script setup>
 
 import { reactive, computed, watch } from 'vue'
 import {additionalMapData} from './resources/additionalMapData'
+
+import SettingsModal from './components/SettingsModal.vue';
 
 const socket = new WebSocket('ws://localhost:3000')
 
@@ -151,6 +155,14 @@ const track = reactive({
 });
 
 const cars = reactive([]);
+
+const settings = reactive({
+  show: {
+    mapControls: true,
+    map: true,
+    positions: true
+  }
+});
 
 // Load additional map data when track changes
 watch(track, (track) => {
