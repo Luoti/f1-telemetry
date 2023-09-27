@@ -10,6 +10,12 @@
                 </header>
                 <section class="modal-card-body">
                     <div class="field">
+                        <label class="label">Server address (default localhost)</label>
+                        <div class="control">
+                            <input v-model="settings.websocketHost" class="input" type="text" placeholder="Default: localhost:3000">
+                        </div>
+                    </div>
+                    <div class="field">
                         <div class="control">
                             <label class="checkbox">
                               <input v-model="settings.show.map" type="checkbox"> Map

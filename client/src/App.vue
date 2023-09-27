@@ -53,17 +53,6 @@
             )
         </button>
       </p>
-      <p class="control">
-        <button class="button" @click="connectWebSocket">Connect</button>
-      </p>
-      <div class="field columns">
-        <div class="column">
-            <label class="label">Server address (default localhost)</label>
-            <div class="control">
-                <input v-model="websocketHost.value" class="input is-uppercase" type="text">
-            </div>
-        </div>
-      </div>
 
     </div>
 
@@ -73,7 +62,7 @@
 
 <script setup>
 
-import { reactive, computed, watch } from 'vue'
+import { reactive, computed, watch, onMounted } from 'vue'
 import { additionalMapData } from './resources/additionalMapData'
 
 import MapComponent from './components/MapComponent.vue';
@@ -102,11 +91,9 @@ const session = reactive({});
 const cars = reactive([]);
 
 var socket = null
-const websocketHost = reactive({
-  value: 'localhost'
-});
 
 const settings = reactive({
+  websocketHost: 'localhost:3000',
   player1Abbreviation: '',
   player2Abbreviation: '',
   player1Color: '',
@@ -133,8 +120,21 @@ if (localStorage.getItem('settings') !== null) {
 }
 
 // Autosave settings
-watch(settings, (settings) => {
+watch(settings, (settings, oldSettings) => {
   localStorage.setItem('settings', JSON.stringify(settings))
+})
+
+// Reconnect when host is changed
+watch(
+  () => settings.websocketHost,
+  () => {
+    // fires only when state.someObject is replaced
+    connectWebSocket()
+  }
+)
+
+onMounted(() => {
+  connectWebSocket()
 })
 
 // @TODO move to map component
@@ -181,7 +181,10 @@ function updateSession(data) {
 }
 
 function connectWebSocket() {
-  socket = new WebSocket('ws://'+websocketHost.value+':3000')
+  if (socket) {
+    socket.close();
+  }
+  socket = new WebSocket('ws://'+settings.websocketHost)
 
   socket.onopen = (event) => {
     console.log("WebSocket connection opened:", event);
