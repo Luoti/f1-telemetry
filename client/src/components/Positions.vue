@@ -73,14 +73,14 @@ function getDriverStyles(car) {
   }
 
   if (
-    car.networkId === 0 &&
+    car.networkId == props.settings.player1NetworkId &&
     props.settings.player1Color != ''
   ) {
     return { backgroundColor: props.settings.player1Color }
   }
 
   if (
-    car.networkId === 1 &&
+    car.networkId == props.settings.player2NetworkId &&
     props.settings.player2Color != ''
   ) {
     return { backgroundColor: props.settings.player2Color }
@@ -141,14 +141,14 @@ function getDriverName(car) {
   }
 
   if (
-    car.networkId === 0 &&
+    car.networkId == props.settings.player1NetworkId &&
     props.settings.player1Abbreviation != ''
   ) {
     return props.settings.player1Abbreviation
   }
 
   if (
-    car.networkId === 1 &&
+    car.networkId == props.settings.player2NetworkId &&
     props.settings.player2Abbreviation != ''
   ) {
     return props.settings.player2Abbreviation

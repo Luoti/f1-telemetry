@@ -94,6 +94,8 @@ var socket = null
 
 const settings = reactive({
   websocketHost: 'localhost:3000',
+  player1NetworkId: 0,
+  player2NetworkId: 1,
   player1Abbreviation: '',
   player2Abbreviation: '',
   player1Color: '',

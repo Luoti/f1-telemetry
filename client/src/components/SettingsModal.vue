@@ -58,23 +58,37 @@
                     </div>
                     <div class="field columns">
                         <div class="column">
+                            <label class="label">Player 1 network Id</label>
+                            <div class="control">
+                                <input v-model="settings.player1NetworkId" class="input" type="text" placeholder="Default: 0">
+                            </div>
+                        </div>
+                        <div class="column">
+                            <label class="label">Player 2 network Id</label>
+                            <div class="control">
+                                <input v-model="settings.player2NetworkId" class="input" type="text" placeholder="Default: 1">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="field columns">
+                        <div class="column">
                             <label class="label">Player 1 abbreviation</label>
                             <div class="control">
                                 <input v-model="settings.player1Abbreviation" class="input is-uppercase" type="text">
                             </div>
                         </div>
                         <div class="column">
-                            <label class="label">Player 1 Color</label>
+                            <label class="label">Player 2 abbreviation</label>
                             <div class="control">
-                                <input v-model="settings.player1Color" class="input is-uppercase" type="text">
+                                <input v-model="settings.player2Abbreviation" class="input is-uppercase" type="text">
                             </div>
                         </div>
                     </div>
                     <div class="field columns">
                         <div class="column">
-                            <label class="label">Player 2 abbreviation</label>
+                            <label class="label">Player 1 Color</label>
                             <div class="control">
-                                <input v-model="settings.player2Abbreviation" class="input is-uppercase" type="text">
+                                <input v-model="settings.player1Color" class="input is-uppercase" type="text">
                             </div>
                         </div>
                         <div class="column">
