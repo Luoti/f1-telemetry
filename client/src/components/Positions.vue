@@ -6,7 +6,7 @@
             <th class="has-text-right">Pos</th>
             <th></th>
             <th>Team</th>
-            <th v-if="settings.show.positionsGap" class="has-text-right">Gap</th>
+            <th v-if="settings.show.positionsGap" class="has-text-right">Gap to next</th>
             <th v-if="settings.show.positionsPenalty" class="has-text-right">Penalty</th>
             <th v-if="settings.show.positionsTyrecompound" class="has-text-right">Tyre</th>
             </tr>
@@ -51,20 +51,21 @@ function formatMilliseconds(milliseconds) {
   }
 
   let formattedTime = ''
-  const totalSeconds = Math.floor(milliseconds / 1000);
-  const minutes = Math.floor(totalSeconds / 60);
-
+  const totalSeconds = Math.floor(milliseconds / 1000)
+  const minutes = Math.floor(totalSeconds / 60)
+  
+  const seconds = totalSeconds % 60
+  const remainingMilliseconds = milliseconds % 1000
+  
   if (minutes > 0) {
-    formattedTime += minutes + ':'
+    formattedTime += minutes + ':' + seconds.toString().padStart(2, 0)
+  } else {
+    formattedTime += seconds.toString()
   }
 
-  const seconds = totalSeconds % 60;
-  const remainingMilliseconds = milliseconds % 1000;
+  formattedTime += '.' + remainingMilliseconds.toString().padEnd(3, 0)
 
-  // Format the result as a string
-  formattedTime += `${seconds.toString().padStart(2, 0)}.${remainingMilliseconds.toString().padEnd(3, 0)}`;
-
-  return formattedTime;
+  return '+'+formattedTime;
 }
 
 function getDriverStyles(car) {
