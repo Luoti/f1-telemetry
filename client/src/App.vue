@@ -155,7 +155,7 @@ watch(session, (session) => {
 })
 
 const posSortedCars = computed(() => {
-  let sortedCars = cars.filter((car) => car.pos != 0);
+  let sortedCars = cars;
 
   // For the vue for key
   for (let i in sortedCars) {
@@ -167,6 +167,12 @@ const posSortedCars = computed(() => {
 
 function updateCars(data) {
   for (const participant in data.data) {
+
+    // Don't add cars that don't have positions
+    if (data.data[participant].pos == 0) {
+      return;
+    }
+
     if (typeof cars[participant] === 'undefined') {
       cars[participant] = {}
     }
