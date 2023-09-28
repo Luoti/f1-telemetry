@@ -33,6 +33,11 @@
 
 <script setup>
 
+import { computed } from 'vue'
+
+// So that we don't try to load unexistign ones
+const supportedTeamIcons = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+
 const props = defineProps({
     settings: {
         required: true
@@ -40,9 +45,20 @@ const props = defineProps({
     session: {
         required: true
     },
-    posSortedCars: {
+    cars: {
         required: true
     }
+})
+
+const posSortedCars = computed(() => {
+  let sortedCars = [...props.cars];
+
+  // For the vue for key
+  for (let i in sortedCars) {
+    sortedCars[i].origIndex = i;
+  }
+
+  return sortedCars.sort((a,b) => a.pos > b.pos)
 })
 
 function formatMilliseconds(milliseconds) {
@@ -129,7 +145,7 @@ function getTyreLetter(tyre) {
 function getTeamStyles(teamId) {
   let output = {}
 
-  if (teamId !== '' && teamId !== null) {
+  if (teamId !== '' && teamId !== null && supportedTeamIcons.indexOf(supportedTeamIcons) != -1) {
     output.backgroundImage = "url('/teams/icons/"+teamId+".png')"
   }
 

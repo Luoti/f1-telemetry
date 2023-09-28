@@ -16,7 +16,7 @@
       </div>
 
       <div v-if="settings.show.positions" class="column f1-font">
-        <positions :settings="settings" :pos-sorted-cars="posSortedCars" :session="session"></positions>
+        <positions :settings="settings" :cars="cars" :session="session"></positions>
       </div>
 
       <div v-if="settings.show.pitStrategy" class="column">
@@ -62,7 +62,7 @@
 
 <script setup>
 
-import { reactive, computed, watch, onMounted } from 'vue'
+import { reactive, watch, onMounted } from 'vue'
 import { additionalMapData } from './resources/additionalMapData'
 
 import MapComponent from './components/MapComponent.vue';
@@ -152,17 +152,6 @@ watch(session, (session) => {
   for (let prop in additionalMapData[session.trackId].mapSize) {
     mapSize[prop] = additionalMapData[session.trackId].mapSize[prop]
   }
-})
-
-const posSortedCars = computed(() => {
-  let sortedCars = cars;
-
-  // For the vue for key
-  for (let i in sortedCars) {
-    sortedCars[i].origIndex = i;
-  }
-
-  return sortedCars.sort((a,b) => a.pos > b.pos)
 })
 
 function updateCars(data) {
