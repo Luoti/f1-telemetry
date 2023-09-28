@@ -48,6 +48,7 @@ class Parser
     for (const participant in data.m_lapData) {
       response.data.push({
         pos: data.m_lapData[participant].m_carPosition,
+        lap: data.m_lapData[participant].m_currentLapNum,
         deltaToFront: data.m_lapData[participant].m_deltaToCarInFrontInMS,
         penalty: data.m_lapData[participant].m_penalties,
       });

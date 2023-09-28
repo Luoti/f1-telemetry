@@ -20,7 +20,7 @@
       </div>
 
       <div v-if="settings.show.pitStrategy" class="column">
-        <pit-strategy :session="session" :cars="cars"></pit-strategy>
+        <pit-strategy :settings="settings" :session="session" :cars="cars"></pit-strategy>
       </div>
     </section>
   

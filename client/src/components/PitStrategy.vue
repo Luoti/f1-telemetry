@@ -3,6 +3,10 @@
         <div v-if="session.pitStop">
             <p>Lap
                 <span class="has-text-primary has-text-weight-bold">
+                    {{ cars[session.player1CarIndex].lap }}
+                </span>
+                /
+                <span class="has-text-primary has-text-weight-bold">
                     {{ session.pitStop.windowIdealLap }}
                 </span>
                 - 
@@ -23,6 +27,9 @@
 <script setup>
 
 defineProps({
+    settings: {
+        required: true
+    },
     session: {
         required: true
     },
